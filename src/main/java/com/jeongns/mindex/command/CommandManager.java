@@ -4,20 +4,22 @@ import com.jeongns.mindex.command.handler.CommandHandler;
 import com.jeongns.mindex.command.handler.HelpCommandHandler;
 import com.jeongns.mindex.command.handler.MindexViewCommandHandler;
 import com.jeongns.mindex.command.handler.RootCommandHandler;
+import com.jeongns.mindex.manager.Manager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 
-public final class CommandManager {
+public final class CommandManager implements Manager {
     private final JavaPlugin plugin;
 
     public CommandManager(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public void loadCommands() {
+    @Override
+    public void initialize() {
         CommandHandler rootCommand = new RootCommandHandler(plugin);
         List<CommandHandler> handlers = List.of(
                 new HelpCommandHandler(plugin),

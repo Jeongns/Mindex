@@ -1,4 +1,4 @@
-package com.jeongns.mindex.domain;
+package com.jeongns.mindex.catalog.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

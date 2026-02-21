@@ -9,13 +9,15 @@ public final class MindexPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         this.commandManager = new CommandManager(this);
-        this.commandManager.loadCommands();
+        this.commandManager.initialize();
 
         getLogger().info("Mindex 플러그인이 시작되었습니다.");
     }
 
     @Override
     public void onDisable() {
+        commandManager.shutdown();
+
         getLogger().info("Mindex 플러그인이 종료되었습니다.");
     }
 }
