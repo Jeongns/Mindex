@@ -1,0 +1,10 @@
+entries:
+  - id: mining.coal
+    name: "석탄"
+    description: "석탄 광석을 채굴했다."
+    material: COAL
+
+  - id: mining.iron
+    name: "철"
+    description: "철 광석을 채굴했다."
+    material: IRON_INGOT

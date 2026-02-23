@@ -1,0 +1,10 @@
+entries:
+  - id: fishing.cod
+    name: "대구"
+    description: "대구를 낚았다."
+    material: COD
+
+  - id: fishing.salmon
+    name: "연어"
+    description: "연어를 낚았다."
+    material: SALMON

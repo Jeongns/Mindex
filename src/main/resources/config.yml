@@ -1,0 +1,11 @@
+schemaVersion: 1
+
+catalog:
+  validateOnLoad: true
+  categories:
+    - id: mining
+      name: "광물"
+      file: "category/mining.yml"
+    - id: fishing
+      name: "낚시"
+      file: "category/fishing.yml"
