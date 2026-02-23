@@ -1,9 +1,18 @@
 package com.jeongns.mindex.catalog;
 
 import com.jeongns.mindex.catalog.entity.MindexCatalog;
+import com.jeongns.mindex.catalog.entity.MindexCategory;
 import com.jeongns.mindex.manager.Manager;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 public class CatalogManager implements Manager {
+    @Getter
+    @Setter
+    private MindexCatalog catalog = new MindexCatalog(List.of());
+
     @Override
     public void initialize() {
     }
@@ -12,7 +21,7 @@ public class CatalogManager implements Manager {
     public void reload() {
     }
 
-    public MindexCatalog getCatalog() {
-        return null;
+    public List<MindexCategory> getCategories() {
+        return catalog.getCategories();
     }
 }
