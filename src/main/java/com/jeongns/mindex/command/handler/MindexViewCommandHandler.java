@@ -4,13 +4,15 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.bukkit.plugin.java.JavaPlugin;
 
-@AllArgsConstructor
 public final class MindexViewCommandHandler implements CommandHandler {
-    private JavaPlugin plugin;
+    private final JavaPlugin plugin;
 
+    public MindexViewCommandHandler(@NonNull JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> createCommand() {
