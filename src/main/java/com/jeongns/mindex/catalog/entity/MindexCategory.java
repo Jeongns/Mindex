@@ -1,11 +1,13 @@
 package com.jeongns.mindex.catalog.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 public final class MindexCategory {
     @NonNull
     private final String id;
@@ -15,16 +17,4 @@ public final class MindexCategory {
     private final String reward;
     @NonNull
     private final List<MindexEntry> entries;
-
-    public MindexCategory(
-            @NonNull String id,
-            @NonNull String categoryName,
-            @NonNull String reward,
-            @NonNull List<MindexEntry> entries
-    ) {
-        this.id = id;
-        this.categoryName = categoryName;
-        this.reward = reward;
-        this.entries = entries;
-    }
 }

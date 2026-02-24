@@ -3,18 +3,16 @@ package com.jeongns.mindex.player;
 import com.jeongns.mindex.manager.Manager;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.player.repository.PlayerStateRepository;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import java.util.HashSet;
 import java.util.UUID;
 
+@AllArgsConstructor
 public class PlayerStateManager implements Manager {
     @NonNull
     private final PlayerStateRepository repository;
-
-    public PlayerStateManager(@NonNull PlayerStateRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public void initialize() {
