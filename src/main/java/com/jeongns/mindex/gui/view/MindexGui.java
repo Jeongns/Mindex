@@ -1,7 +1,6 @@
-package com.jeongns.mindex.gui;
+package com.jeongns.mindex.gui.view;
 
 import com.jeongns.mindex.catalog.entity.MindexCatalog;
-import com.jeongns.mindex.player.entity.PlayerMindexState;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -14,7 +13,7 @@ public final class MindexGui {
     private int page;
     private String category;
 
-    public MindexGui(UUID ownerUuid, MindexCatalog catalog, PlayerMindexState playerState) {
+    public MindexGui(UUID ownerUuid, MindexCatalog catalog) {
         this.holder = new MindexGuiHolder(ownerUuid, DEFAULT_ROWS, DEFAULT_TITLE);
         this.page = 0;
         this.category = "";
