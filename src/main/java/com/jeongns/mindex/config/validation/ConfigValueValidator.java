@@ -36,4 +36,15 @@ public final class ConfigValueValidator {
         }
         return material;
     }
+
+    public static Material optionalMaterial(String value, @NonNull String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return parseMaterial(value);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("유효하지 않은 material: " + fieldName + "=" + value, e);
+        }
+    }
 }
