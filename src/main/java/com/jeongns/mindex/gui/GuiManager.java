@@ -9,6 +9,7 @@ import com.jeongns.mindex.manager.Manager;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class GuiManager implements Manager {
@@ -29,7 +30,7 @@ public class GuiManager implements Manager {
         this.plugin = plugin;
         this.catalogManager = catalogManager;
         this.configLoader = new GuiConfigLoader(plugin);
-        this.listener = new MindexGuiListener();
+        this.listener = new MindexGuiListener(this);
         this.guiModel = GuiModel.empty();
     }
 
@@ -49,13 +50,30 @@ public class GuiManager implements Manager {
     }
 
     public void openDefault(@NonNull Player player) {
-        new MindexGui(player.getUniqueId(), catalogManager.getCatalog()).open(player);
+        new MindexGui(player.getUniqueId(), catalogManager.getCatalog(), guiModel).open(player);
     }
 
     public void openCategory(@NonNull Player player, @NonNull String categoryId) {
-        MindexGui gui = new MindexGui(player.getUniqueId(), catalogManager.getCatalog());
+        MindexGui gui = new MindexGui(player.getUniqueId(), catalogManager.getCatalog(), guiModel);
         gui.setCategory(categoryId);
         gui.open(player);
+    }
+
+    public void handleOpen(@NonNull Player player, @NonNull MindexGui gui) {
+        // Inventory open hook for GUI session lifecycle.
+    }
+
+    public void handleTopInventoryClick(
+            @NonNull Player player,
+            @NonNull MindexGui gui,
+            int rawSlot,
+            @NonNull ClickType clickType
+    ) {
+        gui.handleClick(player, rawSlot, clickType);
+    }
+
+    public void handleClose(@NonNull Player player, @NonNull MindexGui gui) {
+        // Inventory close hook for GUI session lifecycle.
     }
 
     @Override
