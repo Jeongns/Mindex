@@ -1,11 +1,13 @@
 package com.jeongns.mindex.command.handler;
 
+import com.jeongns.mindex.MindexPlugin;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @AllArgsConstructor
@@ -24,9 +26,18 @@ public final class MindexViewCommandHandler implements CommandHandler {
 
     @Override
     public void execute(CommandSourceStack source, String[] args) {
-        source.getSender().sendPlainMessage("=== 내 도감 ===");
-        source.getSender().sendPlainMessage("진행도: 0/0 (초기 구현)");
-        source.getSender().sendPlainMessage("상세 도감 UI는 다음 단계에서 연결됩니다.");
-        plugin.getLogger().info("[Command] /mindex view executed by " + source.getSender().getName());
+        if (!(source.getSender() instanceof Player player)) {
+            source.getSender().sendPlainMessage("플레이어만 사용할 수 있는 명령어입니다.");
+            return;
+        }
+
+        if (!(plugin instanceof MindexPlugin mindexPlugin) || mindexPlugin.getGuiManager() == null) {
+            source.getSender().sendPlainMessage("GUI 매니저가 초기화되지 않았습니다.");
+            plugin.getLogger().warning("[Command] /mindex view failed: GuiManager not initialized");
+            return;
+        }
+
+        mindexPlugin.getGuiManager().openDefault(player);
+        plugin.getLogger().info("[Command] /mindex view opened for " + player.getName());
     }
 }
