@@ -1,0 +1,20 @@
+package com.jeongns.mindex.mindexGui.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import org.bukkit.Material;
+
+import java.util.List;
+
+@Getter
+@AllArgsConstructor
+public final class DefaultSymbol {
+    private final char symbol;
+    @NonNull
+    private final String role;
+    private final Material material;
+    private final String name;
+    @NonNull
+    private final List<String> lore;
+}
