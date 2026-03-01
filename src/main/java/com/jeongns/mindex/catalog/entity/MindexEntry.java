@@ -9,15 +9,16 @@ import org.bukkit.Material;
 @AllArgsConstructor
 public final class MindexEntry {
     @NonNull
-    private String id;
+    private final String id;
     @NonNull
-    private UnlockType unlockType;
+    private final UnlockType unlockType;
     @NonNull
-    private String name;
+    private final String name;
     @NonNull
-    private String description;
+    private final String description;
     @NonNull
-    private Material item;
+    private final Material item;
+    private final int amount;
     @NonNull
-    private String reward;
+    private final String reward;
 }

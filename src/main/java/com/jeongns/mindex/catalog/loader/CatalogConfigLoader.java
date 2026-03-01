@@ -82,6 +82,7 @@ public class CatalogConfigLoader {
                 ConfigValueValidator.requireString(valueAsString(row.get("name")), "entries.name"),
                 ConfigValueValidator.requireString(valueAsString(row.get("description")), "entries.description"),
                 material,
+                parsePositiveAmount(row.get("amount"), "entries.amount", 1),
                 ConfigValueValidator.optionalString(valueAsString(row.get("reward")), "")
         );
     }
@@ -100,5 +101,33 @@ public class CatalogConfigLoader {
 
     private String valueAsString(Object value) {
         return value instanceof String stringValue ? stringValue : null;
+    }
+
+    private int parsePositiveAmount(Object rawValue, @NonNull String fieldName, int defaultValue) {
+        if (rawValue == null) {
+            return defaultValue;
+        }
+
+        int amount;
+        if (rawValue instanceof Number numberValue) {
+            amount = numberValue.intValue();
+        } else if (rawValue instanceof String stringValue) {
+            String trimmed = stringValue.trim();
+            if (trimmed.isEmpty()) {
+                return defaultValue;
+            }
+            try {
+                amount = Integer.parseInt(trimmed);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("유효하지 않은 숫자: " + fieldName + "=" + rawValue, e);
+            }
+        } else {
+            throw new IllegalArgumentException("유효하지 않은 숫자 타입: " + fieldName + "=" + rawValue);
+        }
+
+        if (amount <= 0) {
+            throw new IllegalArgumentException("amount는 1 이상이어야 합니다: " + fieldName + "=" + amount);
+        }
+        return amount;
     }
 }

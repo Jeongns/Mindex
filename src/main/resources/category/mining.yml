@@ -1,6 +1,7 @@
 entries:
   - id: mining.coal
     unlockType: ITEM
+    amount: 16
     name: "석탄"
     description: "석탄 광석을 채굴했다."
     material: COAL
@@ -8,6 +9,7 @@ entries:
 
   - id: mining.iron
     unlockType: ITEM
+    amount: 8
     name: "철"
     description: "철 광석을 채굴했다."
     material: IRON_INGOT
