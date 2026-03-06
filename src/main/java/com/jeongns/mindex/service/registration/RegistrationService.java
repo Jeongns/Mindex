@@ -49,6 +49,7 @@ public class RegistrationService {
             return RegistrationStatus.ALREADY_REGISTERED;
         }
 
+        consumeItems(player, entry);
         rewardExecutor.execute(player, entry.getReward());
         return RegistrationStatus.SUCCESS;
     }
@@ -73,14 +74,38 @@ public class RegistrationService {
             return false;
         }
 
+        ItemMeta itemMeta = itemStack.getItemMeta();
         Integer requiredCustomModelData = entry.getCustomModelData();
         if (requiredCustomModelData == null) {
-            return true;
+            return itemMeta == null || !itemMeta.hasCustomModelData();
         }
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
         return itemMeta != null
                 && itemMeta.hasCustomModelData()
                 && itemMeta.getCustomModelData() == requiredCustomModelData;
+    }
+
+    private void consumeItems(@NonNull Player player, @NonNull MindexEntry entry) {
+        int remainingAmount = entry.getAmount();
+        ItemStack[] contents = player.getInventory().getContents();
+
+        for (int slot = 0; slot < contents.length && remainingAmount > 0; slot++) {
+            ItemStack itemStack = contents[slot];
+            if (!matchesEntry(itemStack, entry)) {
+                continue;
+            }
+
+            int consumedAmount = Math.min(itemStack.getAmount(), remainingAmount);
+            int nextAmount = itemStack.getAmount() - consumedAmount;
+            remainingAmount -= consumedAmount;
+
+            if (nextAmount <= 0) {
+                player.getInventory().setItem(slot, null);
+                continue;
+            }
+
+            itemStack.setAmount(nextAmount);
+            player.getInventory().setItem(slot, itemStack);
+        }
     }
 }
