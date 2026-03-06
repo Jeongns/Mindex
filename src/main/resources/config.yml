@@ -1,5 +1,11 @@
 schemaVersion: 1
 
+mindexGui:
+  locked-entry-display:
+    mode: FIXED_ITEM
+    material: GRAY_DYE
+    custom-model-data:
+
 catalog:
   validateOnLoad: true
   categories:

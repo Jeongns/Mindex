@@ -43,11 +43,11 @@ public final class MindexCatalogGuiInteractionHandler {
             case PREV_PAGE -> gui.movePreviousPage();
             case OPEN_DEFAULT -> gui.openDefaultCategory();
             case OPEN_CATEGORY -> gui.openCategory(action.categoryId());
-            case REGISTER_ENTRY -> registerEntry(player, action.entryId());
+            case REGISTER_ENTRY -> registerEntry(gui, player, action.entryId());
         };
     }
 
-    private boolean registerEntry(@NonNull Player player, String entryId) {
+    private boolean registerEntry(@NonNull MindexCatalogGui gui, @NonNull Player player, String entryId) {
         if (entryId == null || entryId.isBlank()) {
             return false;
         }
@@ -55,6 +55,7 @@ public final class MindexCatalogGuiInteractionHandler {
         RegistrationStatus status = registrationService.register(player, entryId);
         return switch (status) {
             case SUCCESS -> {
+                gui.refresh();
                 player.sendMessage(colorize("&a도감이 등록되었습니다: " + entryId));
                 yield true;
             }

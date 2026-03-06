@@ -8,6 +8,9 @@ import com.jeongns.mindex.mindexGui.model.CategorySymbol;
 import com.jeongns.mindex.mindexGui.model.DefaultSymbol;
 import com.jeongns.mindex.mindexGui.model.GuiModel;
 import com.jeongns.mindex.mindexGui.model.GuiView;
+import com.jeongns.mindex.mindexGui.model.LockedEntryDisplay;
+import com.jeongns.mindex.mindexGui.model.LockedEntryDisplayMode;
+import com.jeongns.mindex.player.PlayerStateManager;
 import com.jeongns.mindex.mindexGui.view.MindexCatalogGui;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
@@ -30,6 +33,8 @@ public final class MindexCatalogGuiRenderer {
             @NonNull MindexCatalogGui holder,
             @NonNull MindexCatalog catalog,
             @NonNull GuiModel guiModel,
+            @NonNull LockedEntryDisplay lockedEntryDisplay,
+            @NonNull PlayerStateManager playerStateManager,
             String categoryId,
             int requestedPage
     ) {
@@ -47,7 +52,7 @@ public final class MindexCatalogGuiRenderer {
         Inventory inventory = Bukkit.createInventory(holder, view.getRows() * 9, Component.text(resolvedTitle));
 
         renderBaseLayout(guiModel, view, inventory, slotActions);
-        renderEntries(entries, entrySlots, page, pageSize, inventory, slotActions);
+        renderEntries(entries, entrySlots, page, pageSize, inventory, slotActions, lockedEntryDisplay, playerStateManager, holder);
 
         return new CatalogGuiRenderResult(inventory, slotActions, page, maxPage);
     }
@@ -79,7 +84,9 @@ public final class MindexCatalogGuiRenderer {
                             defaultSymbol.getMaterial(),
                             defaultSymbol.getName(),
                             defaultSymbol.getLore(),
-                            Material.PAPER
+                            Material.PAPER,
+                            null,
+                            1
                     ));
                     continue;
                 }
@@ -91,7 +98,9 @@ public final class MindexCatalogGuiRenderer {
                             categorySymbol.getMaterial(),
                             categorySymbol.getName(),
                             categorySymbol.getLore(),
-                            Material.BOOK
+                            Material.BOOK,
+                            null,
+                            1
                     ));
                 }
             }
@@ -104,7 +113,10 @@ public final class MindexCatalogGuiRenderer {
             int page,
             int pageSize,
             @NonNull Inventory inventory,
-            @NonNull Map<Integer, GuiAction> slotActions
+            @NonNull Map<Integer, GuiAction> slotActions,
+            @NonNull LockedEntryDisplay lockedEntryDisplay,
+            @NonNull PlayerStateManager playerStateManager,
+            @NonNull MindexCatalogGui holder
     ) {
         if (pageSize <= 0 || entries.isEmpty()) {
             return;
@@ -117,13 +129,18 @@ public final class MindexCatalogGuiRenderer {
         for (int i = start; i < end; i++) {
             MindexEntry entry = entries.get(i);
             int slot = slots.get(targetIndex++);
+            boolean unlocked = playerStateManager.isUnlocked(holder.getOwnerUuid(), entry.getId());
             slotActions.put(slot, GuiAction.registerEntry(entry.getId()));
-            inventory.setItem(slot, createItem(
+            inventory.setItem(slot, unlocked
+                    ? createItem(
                     entry.getItem(),
                     entry.getName(),
                     List.of(entry.getDescription()),
-                    Material.PAPER
-            ));
+                    Material.PAPER,
+                    entry.getCustomModelData(),
+                    entry.getAmount()
+            )
+                    : createLockedEntryItem(entry, lockedEntryDisplay));
         }
     }
 
@@ -220,15 +237,40 @@ public final class MindexCatalogGuiRenderer {
         slotActions.put(slot, GuiAction.openCategory(categorySymbol.getCategoryId()));
     }
 
-    private ItemStack createItem(Material material, String name, List<String> lore, Material fallback) {
+    private ItemStack createLockedEntryItem(@NonNull MindexEntry entry, @NonNull LockedEntryDisplay lockedEntryDisplay) {
+        Material displayMaterial = lockedEntryDisplay.getMode() == LockedEntryDisplayMode.ENTRY_ITEM_CUSTOM_MODEL_DATA
+                ? entry.getItem()
+                : lockedEntryDisplay.getMaterial();
+        return createItem(
+                displayMaterial,
+                entry.getName(),
+                List.of(entry.getDescription()),
+                Material.PAPER,
+                lockedEntryDisplay.getCustomModelData(),
+                entry.getAmount()
+        );
+    }
+
+    private ItemStack createItem(
+            Material material,
+            String name,
+            List<String> lore,
+            Material fallback,
+            Integer customModelData,
+            int amount
+    ) {
         ItemStack itemStack = new ItemStack(material != null ? material : fallback);
+        itemStack.setAmount(Math.max(1, Math.min(amount, itemStack.getMaxStackSize())));
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            if (name != null && !name.isBlank()) {
+            if (name != null) {
                 itemMeta.setDisplayName(colorize(name));
             }
             if (lore != null && !lore.isEmpty()) {
                 itemMeta.setLore(lore.stream().map(this::colorize).toList());
+            }
+            if (customModelData != null) {
+                itemMeta.setCustomModelData(customModelData);
             }
             itemStack.setItemMeta(itemMeta);
         }

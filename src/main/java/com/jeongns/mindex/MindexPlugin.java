@@ -32,7 +32,7 @@ public final class MindexPlugin extends JavaPlugin {
                 playerStateManager,
                 new RewardExecutor(this)
         );
-        this.mindexGuiManager = new MindexGuiManager(this, catalogManager, registrationService);
+        this.mindexGuiManager = new MindexGuiManager(this, catalogManager, playerStateManager, registrationService);
         this.listenerManager = new ListenerManager(this, mindexGuiManager);
         this.commandManager = new CommandManager(this);
 

@@ -4,6 +4,8 @@ import com.jeongns.mindex.catalog.entity.MindexCatalog;
 import com.jeongns.mindex.mindexGui.action.GuiAction;
 import com.jeongns.mindex.mindexGui.interaction.MindexCatalogGuiInteractionHandler;
 import com.jeongns.mindex.mindexGui.model.GuiModel;
+import com.jeongns.mindex.mindexGui.model.LockedEntryDisplay;
+import com.jeongns.mindex.player.PlayerStateManager;
 import com.jeongns.mindex.mindexGui.render.CatalogGuiRenderResult;
 import com.jeongns.mindex.mindexGui.render.MindexCatalogGuiRenderer;
 import com.jeongns.mindex.service.registration.RegistrationService;
@@ -21,6 +23,8 @@ public final class MindexCatalogGui implements InventoryHolder {
     private final UUID ownerUuid;
     private final MindexCatalog catalog;
     private final GuiModel guiModel;
+    private final LockedEntryDisplay lockedEntryDisplay;
+    private final PlayerStateManager playerStateManager;
     private final MindexCatalogGuiRenderer renderer;
     private final MindexCatalogGuiInteractionHandler interactionHandler;
     private final Map<Integer, GuiAction> slotActions;
@@ -33,11 +37,15 @@ public final class MindexCatalogGui implements InventoryHolder {
             @NonNull UUID ownerUuid,
             @NonNull MindexCatalog catalog,
             @NonNull GuiModel guiModel,
+            @NonNull LockedEntryDisplay lockedEntryDisplay,
+            @NonNull PlayerStateManager playerStateManager,
             @NonNull RegistrationService registrationService
     ) {
         this.ownerUuid = ownerUuid;
         this.catalog = catalog;
         this.guiModel = guiModel;
+        this.lockedEntryDisplay = lockedEntryDisplay;
+        this.playerStateManager = playerStateManager;
         this.renderer = new MindexCatalogGuiRenderer();
         this.interactionHandler = new MindexCatalogGuiInteractionHandler(registrationService);
         this.slotActions = new HashMap<>();
@@ -69,8 +77,20 @@ public final class MindexCatalogGui implements InventoryHolder {
         changeCategory(categoryId == null ? "" : categoryId);
     }
 
+    public void refresh() {
+        render();
+    }
+
     private void render() {
-        CatalogGuiRenderResult result = renderer.render(this, catalog, guiModel, categoryId, page);
+        CatalogGuiRenderResult result = renderer.render(
+                this,
+                catalog,
+                guiModel,
+                lockedEntryDisplay,
+                playerStateManager,
+                categoryId,
+                page
+        );
         slotActions.clear();
         slotActions.putAll(result.slotActions());
         inventory = result.inventory();
@@ -119,6 +139,10 @@ public final class MindexCatalogGui implements InventoryHolder {
 
     public boolean isOwner(@NonNull Player player) {
         return ownerUuid.equals(player.getUniqueId());
+    }
+
+    public UUID getOwnerUuid() {
+        return ownerUuid;
     }
 
     public GuiAction findAction(int rawSlot) {
