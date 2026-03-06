@@ -55,7 +55,7 @@ public class CatalogConfigLoader {
         YamlConfiguration categoryConfig = YamlConfiguration.loadConfiguration(categoryFile);
         String categoryId = ConfigValueValidator.requireString(categoryConfig.getString("id"), categoryFile.getName() + ".id");
         String categoryName = ConfigValueValidator.requireString(categoryConfig.getString("name"), categoryFile.getName() + ".name");
-        String categoryReward = ConfigValueValidator.optionalString(categoryConfig.getString("reward"), "");
+        List<String> categoryReward = parseRewardCommands(categoryConfig.get("reward"), categoryFile.getName() + ".reward");
         CategoryRewardButton rewardButton = loadRewardButton(categoryConfig, categoryFile.getName());
         List<MindexEntry> entries = loadEntries(categoryId, categoryConfig);
 
@@ -134,8 +134,33 @@ public class CatalogConfigLoader {
                 material,
                 parseOptionalPositiveInt(row.get("customModelData"), "entries.customModelData"),
                 parsePositiveAmount(row.get("amount"), "entries.amount", 1),
-                ConfigValueValidator.optionalString(valueAsString(row.get("reward")), "")
+                parseRewardCommands(row.get("reward"), "entries.reward")
         );
+    }
+
+    private List<String> parseRewardCommands(Object rawValue, @NonNull String fieldName) {
+        if (rawValue == null) {
+            return List.of();
+        }
+
+        if (rawValue instanceof String stringValue) {
+            String value = ConfigValueValidator.optionalString(stringValue, "");
+            return value.isBlank() ? List.of() : List.of(value);
+        }
+
+        if (rawValue instanceof List<?> rawList) {
+            return rawList.stream()
+                    .map(value -> {
+                        if (!(value instanceof String stringValue)) {
+                            throw new IllegalArgumentException("reward는 문자열 또는 문자열 리스트여야 합니다: " + fieldName);
+                        }
+                        return ConfigValueValidator.optionalString(stringValue, "");
+                    })
+                    .filter(value -> !value.isBlank())
+                    .toList();
+        }
+
+        throw new IllegalArgumentException("reward는 문자열 또는 문자열 리스트여야 합니다: " + fieldName);
     }
 
     private void validateUniqueEntryIds(@NonNull List<MindexCategory> categories) {

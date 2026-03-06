@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Material;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public final class MindexEntry {
@@ -21,5 +23,5 @@ public final class MindexEntry {
     private final Integer customModelData;
     private final int amount;
     @NonNull
-    private final String reward;
+    private final List<String> reward;
 }

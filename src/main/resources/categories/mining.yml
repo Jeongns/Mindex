@@ -1,6 +1,8 @@
 id: mining
 name: "광물"
-reward: "give %player% diamond 1"
+reward:
+  - "give %player% diamond 1"
+  - "effect give %player% haste 10 0 true"
 
 rewardButton:
   material: CHEST
@@ -16,7 +18,9 @@ entries:
     name: "석탄"
     description: "석탄 광석을 채굴했다."
     material: COAL
-    reward: "exp give %player% 2 levels"
+    reward:
+      - "exp give %player% 2 levels"
+      - "effect give %player% speed 5 0 true"
 
   - id: mining.iron
     unlockType: ITEM

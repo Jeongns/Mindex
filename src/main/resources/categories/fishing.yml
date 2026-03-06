@@ -1,6 +1,7 @@
 id: fishing
 name: "낚시"
-reward: "give %player% emerald 1"
+reward:
+  - "give %player% emerald 1"
 
 rewardButton:
   material: BARREL
