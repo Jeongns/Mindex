@@ -5,6 +5,22 @@ mindexGui:
     mode: FIXED_ITEM
     material: GRAY_DYE
     custom-model-data:
+  sounds:
+    menu-select:
+      enabled: true
+      sound: minecraft:ui.button.click
+      volume: 1.0
+      pitch: 1.0
+    registration-success:
+      enabled: true
+      sound: minecraft:entity.player.levelup
+      volume: 1.0
+      pitch: 1.2
+    registration-fail:
+      enabled: true
+      sound: minecraft:entity.villager.no
+      volume: 1.0
+      pitch: 1.0
 
 catalog:
   validateOnLoad: true

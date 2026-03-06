@@ -4,6 +4,7 @@ import com.jeongns.mindex.catalog.entity.MindexCatalog;
 import com.jeongns.mindex.mindexGui.action.GuiAction;
 import com.jeongns.mindex.mindexGui.interaction.MindexCatalogGuiInteractionHandler;
 import com.jeongns.mindex.mindexGui.model.GuiModel;
+import com.jeongns.mindex.mindexGui.model.GuiSoundSettings;
 import com.jeongns.mindex.mindexGui.model.LockedEntryDisplay;
 import com.jeongns.mindex.player.PlayerStateManager;
 import com.jeongns.mindex.mindexGui.render.CatalogGuiRenderResult;
@@ -24,6 +25,7 @@ public final class MindexCatalogGui implements InventoryHolder {
     private final MindexCatalog catalog;
     private final GuiModel guiModel;
     private final LockedEntryDisplay lockedEntryDisplay;
+    private final GuiSoundSettings guiSoundSettings;
     private final PlayerStateManager playerStateManager;
     private final MindexCatalogGuiRenderer renderer;
     private final MindexCatalogGuiInteractionHandler interactionHandler;
@@ -38,6 +40,7 @@ public final class MindexCatalogGui implements InventoryHolder {
             @NonNull MindexCatalog catalog,
             @NonNull GuiModel guiModel,
             @NonNull LockedEntryDisplay lockedEntryDisplay,
+            @NonNull GuiSoundSettings guiSoundSettings,
             @NonNull PlayerStateManager playerStateManager,
             @NonNull RegistrationService registrationService
     ) {
@@ -45,9 +48,10 @@ public final class MindexCatalogGui implements InventoryHolder {
         this.catalog = catalog;
         this.guiModel = guiModel;
         this.lockedEntryDisplay = lockedEntryDisplay;
+        this.guiSoundSettings = guiSoundSettings;
         this.playerStateManager = playerStateManager;
         this.renderer = new MindexCatalogGuiRenderer();
-        this.interactionHandler = new MindexCatalogGuiInteractionHandler(registrationService);
+        this.interactionHandler = new MindexCatalogGuiInteractionHandler(registrationService, guiSoundSettings);
         this.slotActions = new HashMap<>();
         this.page = 0;
         this.maxPage = 1;
