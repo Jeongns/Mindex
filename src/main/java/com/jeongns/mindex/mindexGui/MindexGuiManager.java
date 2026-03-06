@@ -1,9 +1,9 @@
 package com.jeongns.mindex.mindexGui;
 
 import com.jeongns.mindex.catalog.CatalogManager;
-import com.jeongns.mindex.mindexGui.gui.MindexCatalogGui;
 import com.jeongns.mindex.mindexGui.model.GuiModel;
 import com.jeongns.mindex.mindexGui.loader.GuiConfigLoader;
+import com.jeongns.mindex.mindexGui.view.MindexCatalogGui;
 import com.jeongns.mindex.manager.Manager;
 import com.jeongns.mindex.service.registration.RegistrationService;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.jeongns.mindex.listener.handler;
 
 import com.jeongns.mindex.mindexGui.MindexGuiManager;
-import com.jeongns.mindex.mindexGui.gui.MindexCatalogGui;
+import com.jeongns.mindex.mindexGui.view.MindexCatalogGui;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
