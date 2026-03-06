@@ -2,7 +2,9 @@ package com.jeongns.mindex.listener;
 
 import com.jeongns.mindex.mindexGui.MindexGuiManager;
 import com.jeongns.mindex.listener.handler.MindexGuiListener;
+import com.jeongns.mindex.listener.handler.PlayerStateListener;
 import com.jeongns.mindex.manager.Manager;
+import com.jeongns.mindex.player.PlayerStateManager;
 import lombok.NonNull;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -16,10 +18,15 @@ public class ListenerManager implements Manager {
     @NonNull
     private final List<Listener> listeners;
 
-    public ListenerManager(@NonNull JavaPlugin plugin, @NonNull MindexGuiManager mindexGuiManager) {
+    public ListenerManager(
+            @NonNull JavaPlugin plugin,
+            @NonNull MindexGuiManager mindexGuiManager,
+            @NonNull PlayerStateManager playerStateManager
+    ) {
         this.plugin = plugin;
         this.listeners = List.of(
-                new MindexGuiListener(mindexGuiManager)
+                new MindexGuiListener(mindexGuiManager),
+                new PlayerStateListener(playerStateManager)
         );
     }
 

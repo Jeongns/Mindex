@@ -1,5 +1,8 @@
 schemaVersion: 1
 
+player-state:
+  auto-save-interval-minutes: 1
+
 mindexGui:
   locked-entry-display:
     mode: FIXED_ITEM

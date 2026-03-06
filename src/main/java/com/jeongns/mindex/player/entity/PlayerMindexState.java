@@ -36,4 +36,12 @@ public final class PlayerMindexState {
     public boolean claimCategoryReward(String categoryId) {
         return claimedCategoryRewardIds.add(categoryId);
     }
+
+    public PlayerMindexState copy() {
+        return new PlayerMindexState(
+                playerUuid,
+                Set.copyOf(unlockedEntryIds),
+                Set.copyOf(claimedCategoryRewardIds)
+        );
+    }
 }
