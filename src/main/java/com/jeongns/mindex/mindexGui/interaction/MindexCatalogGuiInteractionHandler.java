@@ -52,6 +52,7 @@ public final class MindexCatalogGuiInteractionHandler {
             case OPEN_DEFAULT -> gui.openDefaultCategory();
             case OPEN_CATEGORY -> gui.openCategory(action.categoryId());
             case REGISTER_ENTRY -> registerEntry(gui, player, action.entryId());
+            case CLAIM_CATEGORY_REWARD -> claimCategoryReward(player);
         };
 
         if (changed && action.type() != com.jeongns.mindex.mindexGui.action.ActionType.REGISTER_ENTRY) {
@@ -94,6 +95,12 @@ public final class MindexCatalogGuiInteractionHandler {
                 yield false;
             }
         };
+    }
+
+    private boolean claimCategoryReward(@NonNull Player player) {
+        playSound(player, guiSoundSettings.getRegistrationFail());
+        player.sendMessage(colorize("&e카테고리 완료 보상 수령은 아직 구현되지 않았습니다."));
+        return false;
     }
 
     private void playSound(@NonNull Player player, @NonNull GuiSoundSetting soundSetting) {

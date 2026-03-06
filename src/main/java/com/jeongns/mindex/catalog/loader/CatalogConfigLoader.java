@@ -1,5 +1,6 @@
 package com.jeongns.mindex.catalog.loader;
 
+import com.jeongns.mindex.catalog.entity.CategoryRewardButton;
 import com.jeongns.mindex.catalog.entity.MindexCategory;
 import com.jeongns.mindex.catalog.entity.MindexEntry;
 import com.jeongns.mindex.catalog.entity.UnlockType;
@@ -10,6 +11,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -19,50 +22,97 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class CatalogConfigLoader {
-    private static final String CATEGORY_LIST_PATH = "catalog.categories";
+    private static final String CATEGORY_DIRECTORY = "categories";
     private static final String ENTRY_LIST_PATH = "entries";
+    private static final List<String> DEFAULT_CATEGORY_RESOURCES = List.of(
+            "categories/mining.yml",
+            "categories/fishing.yml"
+    );
 
     @NonNull
     private final JavaPlugin plugin;
 
     public List<MindexCategory> loadCategories() {
-        plugin.saveDefaultConfig();
-        plugin.reloadConfig();
+        ensureCategoryDirectory();
 
-        List<MindexCategory> categories = plugin.getConfig().getMapList(CATEGORY_LIST_PATH).stream()
-                .map(this::toCategory)
+        File[] categoryFiles = new File(plugin.getDataFolder(), CATEGORY_DIRECTORY)
+                .listFiles((dir, name) -> name.endsWith(".yml"));
+        if (categoryFiles == null) {
+            return List.of();
+        }
+
+        List<MindexCategory> categories = Arrays.stream(categoryFiles)
+                .sorted(Comparator.comparing(File::getName))
+                .map(this::loadCategory)
                 .collect(Collectors.toList());
 
+        validateUniqueCategoryIds(categories);
         validateUniqueEntryIds(categories);
         return categories;
     }
 
-    private MindexCategory toCategory(@NonNull Map<?, ?> row) {
-        String categoryId = ConfigValueValidator.requireString(valueAsString(row.get("id")), "catalog.categories.id");
-        String categoryName = ConfigValueValidator.requireString(valueAsString(row.get("name")), "catalog.categories.name");
-        String categoryFilePath = ConfigValueValidator.requireString(valueAsString(row.get("file")), "catalog.categories.file");
-        String categoryReward = ConfigValueValidator.optionalString(valueAsString(row.get("reward")), "");
+    private MindexCategory loadCategory(@NonNull File categoryFile) {
+        YamlConfiguration categoryConfig = YamlConfiguration.loadConfiguration(categoryFile);
+        String categoryId = ConfigValueValidator.requireString(categoryConfig.getString("id"), categoryFile.getName() + ".id");
+        String categoryName = ConfigValueValidator.requireString(categoryConfig.getString("name"), categoryFile.getName() + ".name");
+        String categoryReward = ConfigValueValidator.optionalString(categoryConfig.getString("reward"), "");
+        CategoryRewardButton rewardButton = loadRewardButton(categoryConfig, categoryFile.getName());
+        List<MindexEntry> entries = loadEntries(categoryId, categoryConfig);
 
-        ensureCategoryFile(categoryFilePath);
-        List<MindexEntry> entries = loadEntries(categoryId, categoryFilePath);
-
-        return new MindexCategory(categoryId, categoryName, categoryReward, entries);
+        return new MindexCategory(categoryId, categoryName, categoryReward, rewardButton, entries);
     }
 
-    private void ensureCategoryFile(@NonNull String categoryFilePath) {
-        File categoryFile = new File(plugin.getDataFolder(), categoryFilePath);
-        if (!categoryFile.exists()) {
-            plugin.saveResource(categoryFilePath, false);
+    private CategoryRewardButton loadRewardButton(@NonNull YamlConfiguration categoryConfig, @NonNull String fileName) {
+        String path = "rewardButton";
+        String materialName = ConfigValueValidator.requireString(
+                categoryConfig.getString(path + ".material"),
+                fileName + "." + path + ".material"
+        );
+        String name = ConfigValueValidator.requireString(
+                categoryConfig.getString(path + ".name"),
+                fileName + "." + path + ".name"
+        );
+        List<String> lore = categoryConfig.getStringList(path + ".lore");
+
+        return new CategoryRewardButton(
+                ConfigValueValidator.parseMaterial(materialName),
+                name,
+                lore
+        );
+    }
+
+    private void ensureCategoryDirectory() {
+        File directory = new File(plugin.getDataFolder(), CATEGORY_DIRECTORY);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        File[] categoryFiles = directory.listFiles((dir, name) -> name.endsWith(".yml"));
+        if (categoryFiles != null && categoryFiles.length > 0) {
+            return;
+        }
+
+        for (String resourcePath : DEFAULT_CATEGORY_RESOURCES) {
+            if (plugin.getResource(resourcePath) != null) {
+                plugin.saveResource(resourcePath, false);
+            }
         }
     }
 
-    private List<MindexEntry> loadEntries(@NonNull String categoryId, @NonNull String categoryFilePath) {
-        File categoryFile = new File(plugin.getDataFolder(), categoryFilePath);
-        YamlConfiguration categoryConfig = YamlConfiguration.loadConfiguration(categoryFile);
-
+    private List<MindexEntry> loadEntries(@NonNull String categoryId, @NonNull YamlConfiguration categoryConfig) {
         return categoryConfig.getMapList(ENTRY_LIST_PATH).stream()
                 .map(row -> toEntry(categoryId, row))
                 .collect(Collectors.toList());
+    }
+
+    private void validateUniqueCategoryIds(@NonNull List<MindexCategory> categories) {
+        Set<String> seen = new HashSet<>();
+        for (MindexCategory category : categories) {
+            String normalized = category.getId().toLowerCase(Locale.ROOT);
+            if (!seen.add(normalized)) {
+                throw new IllegalArgumentException("중복 category.id 발견: " + category.getId());
+            }
+        }
     }
 
     private MindexEntry toEntry(@NonNull String categoryId, @NonNull Map<?, ?> row) {

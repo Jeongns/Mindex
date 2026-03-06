@@ -21,15 +21,3 @@ mindexGui:
       sound: minecraft:entity.villager.no
       volume: 1.0
       pitch: 1.0
-
-catalog:
-  validateOnLoad: true
-  categories:
-    - id: mining
-      name: "광물"
-      file: "category/mining.yml"
-      reward: "give %player% diamond 1"
-    - id: fishing
-      name: "낚시"
-      file: "category/fishing.yml"
-      reward: "give %player% emerald 1"

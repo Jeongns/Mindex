@@ -3,6 +3,7 @@ package com.jeongns.mindex.mindexGui.render;
 import com.jeongns.mindex.catalog.entity.MindexCatalog;
 import com.jeongns.mindex.catalog.entity.MindexCategory;
 import com.jeongns.mindex.catalog.entity.MindexEntry;
+import com.jeongns.mindex.catalog.entity.CategoryRewardButton;
 import com.jeongns.mindex.mindexGui.action.GuiAction;
 import com.jeongns.mindex.mindexGui.model.CategorySymbol;
 import com.jeongns.mindex.mindexGui.model.DefaultSymbol;
@@ -50,8 +51,9 @@ public final class MindexCatalogGuiRenderer {
 
         String resolvedTitle = resolveTitle(catalog, view.getTitle(), categoryId, page, maxPage);
         Inventory inventory = Bukkit.createInventory(holder, view.getRows() * 9, Component.text(resolvedTitle));
+        MindexCategory currentCategory = findCategory(catalog, categoryId);
 
-        renderBaseLayout(guiModel, view, inventory, slotActions);
+        renderBaseLayout(guiModel, view, inventory, slotActions, currentCategory);
         renderEntries(entries, entrySlots, page, pageSize, inventory, slotActions, lockedEntryDisplay, playerStateManager, holder);
 
         return new CatalogGuiRenderResult(inventory, slotActions, page, maxPage);
@@ -61,7 +63,8 @@ public final class MindexCatalogGuiRenderer {
             @NonNull GuiModel guiModel,
             @NonNull GuiView view,
             @NonNull Inventory inventory,
-            @NonNull Map<Integer, GuiAction> slotActions
+            @NonNull Map<Integer, GuiAction> slotActions,
+            MindexCategory currentCategory
     ) {
         for (int row = 0; row < view.getLayout().size(); row++) {
             String line = view.getLayout().get(row);
@@ -80,14 +83,7 @@ public final class MindexCatalogGuiRenderer {
                         continue;
                     }
                     registerDefaultAction(slot, role, slotActions);
-                    inventory.setItem(slot, createItem(
-                            defaultSymbol.getMaterial(),
-                            defaultSymbol.getName(),
-                            defaultSymbol.getLore(),
-                            Material.PAPER,
-                            null,
-                            1
-                    ));
+                    inventory.setItem(slot, createDefaultSymbolItem(defaultSymbol, currentCategory));
                     continue;
                 }
 
@@ -160,15 +156,8 @@ public final class MindexCatalogGuiRenderer {
     }
 
     private List<MindexEntry> findEntries(@NonNull MindexCatalog catalog, String currentCategoryId) {
-        if (currentCategoryId == null || currentCategoryId.isBlank()) {
-            return Collections.emptyList();
-        }
-        for (MindexCategory category : catalog.getCategories()) {
-            if (category.getId().equalsIgnoreCase(currentCategoryId)) {
-                return category.getEntries();
-            }
-        }
-        return Collections.emptyList();
+        MindexCategory category = findCategory(catalog, currentCategoryId);
+        return category == null ? Collections.emptyList() : category.getEntries();
     }
 
     private String resolveTitle(
@@ -187,13 +176,12 @@ public final class MindexCatalogGuiRenderer {
     }
 
     private String resolveCategoryName(@NonNull MindexCatalog catalog, String currentCategoryId) {
+        MindexCategory category = findCategory(catalog, currentCategoryId);
+        if (category != null) {
+            return category.getCategoryName();
+        }
         if (currentCategoryId == null || currentCategoryId.isBlank()) {
             return "카테고리";
-        }
-        for (MindexCategory category : catalog.getCategories()) {
-            if (category.getId().equalsIgnoreCase(currentCategoryId)) {
-                return category.getCategoryName();
-            }
         }
         return currentCategoryId.toLowerCase(Locale.ROOT);
     }
@@ -223,7 +211,46 @@ public final class MindexCatalogGuiRenderer {
         }
         if ("OPEN_DEFAULT".equalsIgnoreCase(role)) {
             slotActions.put(slot, GuiAction.openDefault());
+            return;
         }
+        if ("CLAIM_CATEGORY_REWARD".equalsIgnoreCase(role)) {
+            slotActions.put(slot, GuiAction.claimCategoryReward());
+        }
+    }
+
+    private ItemStack createDefaultSymbolItem(@NonNull DefaultSymbol defaultSymbol, MindexCategory currentCategory) {
+        if ("CLAIM_CATEGORY_REWARD".equalsIgnoreCase(defaultSymbol.getRole()) && currentCategory != null) {
+            CategoryRewardButton rewardButton = currentCategory.getRewardButton();
+            return createItem(
+                    rewardButton.getMaterial(),
+                    rewardButton.getName(),
+                    rewardButton.getLore(),
+                    Material.CHEST,
+                    null,
+                    1
+            );
+        }
+
+        return createItem(
+                defaultSymbol.getMaterial(),
+                defaultSymbol.getName(),
+                defaultSymbol.getLore(),
+                Material.PAPER,
+                null,
+                1
+        );
+    }
+
+    private MindexCategory findCategory(@NonNull MindexCatalog catalog, String currentCategoryId) {
+        if (currentCategoryId == null || currentCategoryId.isBlank()) {
+            return null;
+        }
+        for (MindexCategory category : catalog.getCategories()) {
+            if (category.getId().equalsIgnoreCase(currentCategoryId)) {
+                return category;
+            }
+        }
+        return null;
     }
 
     private void registerCategoryAction(

@@ -5,5 +5,6 @@ public enum ActionType {
     PREV_PAGE,
     OPEN_DEFAULT,
     OPEN_CATEGORY,
-    REGISTER_ENTRY
+    REGISTER_ENTRY,
+    CLAIM_CATEGORY_REWARD
 }

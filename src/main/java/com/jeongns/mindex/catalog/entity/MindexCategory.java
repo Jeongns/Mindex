@@ -16,5 +16,7 @@ public final class MindexCategory {
     @NonNull
     private final String reward;
     @NonNull
+    private final CategoryRewardButton rewardButton;
+    @NonNull
     private final List<MindexEntry> entries;
 }

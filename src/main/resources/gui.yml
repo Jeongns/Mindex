@@ -22,6 +22,13 @@ gui:
       role: OPEN_DEFAULT
       material: COMPASS
       name: "&e카테고리 선택으로"
+    "R":
+      role: CLAIM_CATEGORY_REWARD
+      material: CHEST
+      name: "&6카테고리 완료 보상"
+      lore:
+        - "&7현재 카테고리를 완성하면"
+        - "&7이 버튼으로 보상을 수령합니다."
 
   # defaultView 에서 사용되는 카테고리 버튼 심볼
   categorySymbols:
@@ -43,14 +50,14 @@ gui:
   entryView:
     title: "&6도감 - %category_name% &7(%page%/%max_page%)"
     rows: 6
-    # category/*.yml 에 gui.layout 이 있으면 해당 레이아웃을 우선 사용
+    # categories/*.yml 에 gui.layout 이 있으면 해당 레이아웃을 우선 사용
     layout:
       - "#########"
       - "#EEEEEEE#"
       - "#EEEEEEE#"
       - "#EEEEEEE#"
       - "#EEEEEEE#"
-      - "#<##D##>#"
+      - "#<#D#R#>#"
 
   defaultView:
     title: "&6도감 카테고리"
