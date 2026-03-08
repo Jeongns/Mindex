@@ -219,7 +219,7 @@ public final class MindexCatalogGuiRenderer {
                     rewardButton.getName(),
                     rewardButton.getLore(),
                     Material.CHEST,
-                    null,
+                    rewardButton.getCustomModelData(),
                     1
             );
         }

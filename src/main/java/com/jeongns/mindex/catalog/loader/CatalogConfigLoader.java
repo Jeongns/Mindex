@@ -3,7 +3,6 @@ package com.jeongns.mindex.catalog.loader;
 import com.jeongns.mindex.catalog.entity.CategoryRewardButton;
 import com.jeongns.mindex.catalog.entity.MindexCategory;
 import com.jeongns.mindex.catalog.entity.MindexEntry;
-import com.jeongns.mindex.catalog.entity.UnlockType;
 import com.jeongns.mindex.config.validation.ConfigValueValidator;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -74,9 +73,14 @@ public class CatalogConfigLoader {
                 fileName + "." + path + ".name"
         );
         List<String> lore = categoryConfig.getStringList(path + ".lore");
+        Integer customModelData = parseOptionalPositiveInt(
+                categoryConfig.get(path + ".customModelData"),
+                fileName + "." + path + ".customModelData"
+        );
 
         return new CategoryRewardButton(
                 ConfigValueValidator.parseMaterial(materialName),
+                customModelData,
                 name,
                 lore
         );
@@ -124,12 +128,6 @@ public class CatalogConfigLoader {
 
         return new MindexEntry(
                 entryId,
-                UnlockType.fromConfig(
-                        ConfigValueValidator.requireString(
-                                valueAsString(row.get("unlockType")),
-                                "entries.unlockType"
-                        )
-                ),
                 ConfigValueValidator.requireString(valueAsString(row.get("name")), "entries.name"),
                 ConfigValueValidator.requireString(valueAsString(row.get("description")), "entries.description"),
                 material,

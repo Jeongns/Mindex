@@ -12,6 +12,7 @@ import java.util.List;
 public final class CategoryRewardButton {
     @NonNull
     private final Material material;
+    private final Integer customModelData;
     @NonNull
     private final String name;
     @NonNull
