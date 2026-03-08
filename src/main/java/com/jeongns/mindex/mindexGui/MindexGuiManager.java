@@ -3,10 +3,11 @@ package com.jeongns.mindex.mindexGui;
 import com.jeongns.mindex.catalog.CatalogManager;
 import com.jeongns.mindex.manager.Manager;
 import com.jeongns.mindex.mindexGui.loader.GuiConfigLoader;
-import com.jeongns.mindex.mindexGui.model.GuiSettings;
-import com.jeongns.mindex.mindexGui.model.GuiModel;
-import com.jeongns.mindex.mindexGui.model.GuiSoundSettings;
-import com.jeongns.mindex.mindexGui.model.LockedEntryDisplay;
+import com.jeongns.mindex.mindexGui.model.config.GuiMessageSettings;
+import com.jeongns.mindex.mindexGui.model.config.GuiSettings;
+import com.jeongns.mindex.mindexGui.model.layout.GuiModel;
+import com.jeongns.mindex.mindexGui.model.config.GuiSoundSettings;
+import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplay;
 import com.jeongns.mindex.mindexGui.view.MindexCatalogGui;
 import com.jeongns.mindex.player.PlayerStateManager;
 import com.jeongns.mindex.service.registration.RegistrationService;
@@ -16,6 +17,9 @@ import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class MindexGuiManager implements Manager {
     @NonNull
@@ -40,6 +44,9 @@ public class MindexGuiManager implements Manager {
     @Getter
     @NonNull
     private GuiSoundSettings guiSoundSettings;
+    @Getter
+    @NonNull
+    private GuiMessageSettings guiMessageSettings;
 
     public MindexGuiManager(
             @NonNull JavaPlugin plugin,
@@ -57,6 +64,7 @@ public class MindexGuiManager implements Manager {
         this.guiModel = GuiModel.empty();
         this.lockedEntryDisplay = LockedEntryDisplay.defaultValue();
         this.guiSoundSettings = GuiSoundSettings.defaultValue();
+        this.guiMessageSettings = GuiMessageSettings.defaultValue();
     }
 
     @Override
@@ -81,10 +89,16 @@ public class MindexGuiManager implements Manager {
         this.guiSoundSettings = guiSoundSettings;
     }
 
+    public void applyGuiMessageSettings(@NonNull GuiMessageSettings guiMessageSettings) {
+        this.guiMessageSettings = guiMessageSettings;
+    }
+
     public void applyGuiSettings(@NonNull GuiSettings guiSettings) {
+        validateCategorySymbols(guiSettings.getGuiModel());
         applyGuiModel(guiSettings.getGuiModel());
         applyLockedEntryDisplay(guiSettings.getLockedEntryDisplay());
         applyGuiSoundSettings(guiSettings.getGuiSoundSettings());
+        applyGuiMessageSettings(guiSettings.getGuiMessageSettings());
     }
 
     public void openDefault(@NonNull Player player) {
@@ -94,7 +108,9 @@ public class MindexGuiManager implements Manager {
                 guiModel,
                 lockedEntryDisplay,
                 guiSoundSettings,
+                guiMessageSettings,
                 playerStateManager,
+                plugin.getLogger(),
                 registrationService,
                 categoryRewardService
         ).open(player);
@@ -107,7 +123,9 @@ public class MindexGuiManager implements Manager {
                 guiModel,
                 lockedEntryDisplay,
                 guiSoundSettings,
+                guiMessageSettings,
                 playerStateManager,
+                plugin.getLogger(),
                 registrationService,
                 categoryRewardService
         );
@@ -130,6 +148,18 @@ public class MindexGuiManager implements Manager {
 
     public void handleClose(@NonNull Player player, @NonNull MindexCatalogGui gui) {
         // Inventory close hook for GUI session lifecycle.
+    }
+
+    private void validateCategorySymbols(@NonNull GuiModel guiModel) {
+        Set<String> categoryIds = new HashSet<>();
+        catalogManager.getCategories().forEach(category -> categoryIds.add(category.getId().toLowerCase()));
+
+        guiModel.getCategorySymbols().values().forEach(symbol -> {
+            if (!categoryIds.contains(symbol.getCategoryId().toLowerCase())) {
+                throw new IllegalArgumentException("존재하지 않는 categoryId를 참조하는 categorySymbol입니다: "
+                        + symbol.getCategoryId());
+            }
+        });
     }
 
     @Override

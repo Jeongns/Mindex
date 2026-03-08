@@ -38,7 +38,8 @@ public class RegistrationService {
 
         MindexEntry entry = entryOptional.get();
         if (entry.getUnlockType() != UnlockType.ITEM) {
-            return RegistrationStatus.UNSUPPORTED_UNLOCK_TYPE;
+            throw new IllegalStateException("지원하지 않는 unlockType입니다: entryId="
+                    + entry.getId() + ", unlockType=" + entry.getUnlockType());
         }
         if (!canRegister(player, entry)) {
             return RegistrationStatus.REQUIREMENT_NOT_MET;

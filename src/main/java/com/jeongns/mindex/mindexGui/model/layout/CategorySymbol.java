@@ -1,4 +1,4 @@
-package com.jeongns.mindex.mindexGui.model;
+package com.jeongns.mindex.mindexGui.model.layout;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,12 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public final class DefaultSymbol {
+public final class CategorySymbol {
     private final char symbol;
     @NonNull
     private final SymbolRole role;
+    @NonNull
+    private final String categoryId;
     private final Material material;
     private final String name;
     @NonNull

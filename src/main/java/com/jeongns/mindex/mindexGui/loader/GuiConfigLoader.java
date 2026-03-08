@@ -2,16 +2,17 @@ package com.jeongns.mindex.mindexGui.loader;
 
 import com.jeongns.mindex.config.YamlNodeReader;
 import com.jeongns.mindex.config.validation.ConfigValueValidator;
-import com.jeongns.mindex.mindexGui.model.GuiSettings;
-import com.jeongns.mindex.mindexGui.model.GuiModel;
-import com.jeongns.mindex.mindexGui.model.GuiSoundSetting;
-import com.jeongns.mindex.mindexGui.model.GuiSoundSettings;
-import com.jeongns.mindex.mindexGui.model.CategorySymbol;
-import com.jeongns.mindex.mindexGui.model.DefaultSymbol;
-import com.jeongns.mindex.mindexGui.model.GuiView;
-import com.jeongns.mindex.mindexGui.model.LockedEntryDisplay;
-import com.jeongns.mindex.mindexGui.model.LockedEntryDisplayMode;
-import com.jeongns.mindex.mindexGui.model.SymbolRole;
+import com.jeongns.mindex.mindexGui.model.config.GuiSettings;
+import com.jeongns.mindex.mindexGui.model.layout.GuiModel;
+import com.jeongns.mindex.mindexGui.model.config.GuiMessageSettings;
+import com.jeongns.mindex.mindexGui.model.config.GuiSoundSetting;
+import com.jeongns.mindex.mindexGui.model.config.GuiSoundSettings;
+import com.jeongns.mindex.mindexGui.model.layout.CategorySymbol;
+import com.jeongns.mindex.mindexGui.model.layout.DefaultSymbol;
+import com.jeongns.mindex.mindexGui.model.layout.GuiView;
+import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplay;
+import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplayMode;
+import com.jeongns.mindex.mindexGui.model.layout.SymbolRole;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -23,8 +24,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @AllArgsConstructor
 public class GuiConfigLoader {
@@ -40,8 +43,9 @@ public class GuiConfigLoader {
         GuiModel guiModel = loadGuiModel();
         LockedEntryDisplay lockedEntryDisplay = loadLockedEntryDisplay();
         GuiSoundSettings guiSoundSettings = loadGuiSoundSettings();
+        GuiMessageSettings guiMessageSettings = loadGuiMessageSettings();
 
-        return new GuiSettings(guiModel, lockedEntryDisplay, guiSoundSettings);
+        return new GuiSettings(guiModel, lockedEntryDisplay, guiSoundSettings, guiMessageSettings);
     }
 
     private GuiModel loadGuiModel() {
@@ -59,6 +63,7 @@ public class GuiConfigLoader {
 
         validateLayout(defaultView, defaultViewNode.getPath(), defaultSymbols, categorySymbols);
         validateLayout(entryView, entryViewNode.getPath(), defaultSymbols, categorySymbols);
+        validateDefaultView(defaultView, defaultViewNode.getPath(), defaultSymbols);
 
         return new GuiModel(
                 Map.copyOf(defaultSymbols),
@@ -93,6 +98,18 @@ public class GuiConfigLoader {
                 loadGuiSoundSetting("mindexGui.sounds.menu-select", GuiSoundSettings.defaultValue().getMenuSelect()),
                 loadGuiSoundSetting("mindexGui.sounds.registration-success", GuiSoundSettings.defaultValue().getRegistrationSuccess()),
                 loadGuiSoundSetting("mindexGui.sounds.registration-fail", GuiSoundSettings.defaultValue().getRegistrationFail())
+        );
+    }
+
+    private GuiMessageSettings loadGuiMessageSettings() {
+        GuiMessageSettings defaultValue = GuiMessageSettings.defaultValue();
+        return new GuiMessageSettings(
+                plugin.getConfig().getString("mindexGui.messages.registration.success", defaultValue.getRegistrationSuccess()),
+                plugin.getConfig().getString("mindexGui.messages.registration.already-registered", defaultValue.getRegistrationAlreadyRegistered()),
+                plugin.getConfig().getString("mindexGui.messages.registration.requirement-not-met", defaultValue.getRegistrationRequirementNotMet()),
+                plugin.getConfig().getString("mindexGui.messages.category-reward.success", defaultValue.getCategoryRewardSuccess()),
+                plugin.getConfig().getString("mindexGui.messages.category-reward.not-complete", defaultValue.getCategoryRewardNotComplete()),
+                plugin.getConfig().getString("mindexGui.messages.category-reward.already-claimed", defaultValue.getCategoryRewardAlreadyClaimed())
         );
     }
 
@@ -238,6 +255,21 @@ public class GuiConfigLoader {
                 boolean exists = defaultSymbols.containsKey(symbol) || categorySymbols.containsKey(symbol);
                 if (!exists) {
                     throw new IllegalArgumentException("정의되지 않은 심볼입니다: " + symbol + " in " + viewPath);
+                }
+            }
+        }
+    }
+
+    private void validateDefaultView(
+            @NonNull GuiView defaultView,
+            @NonNull String viewPath,
+            @NonNull Map<Character, DefaultSymbol> defaultSymbols
+    ) {
+        for (String row : defaultView.getLayout()) {
+            for (int i = 0; i < row.length(); i++) {
+                DefaultSymbol symbol = defaultSymbols.get(row.charAt(i));
+                if (symbol != null && symbol.getRole() == SymbolRole.CLAIM_CATEGORY_REWARD) {
+                    throw new IllegalArgumentException("defaultView에는 CLAIM_CATEGORY_REWARD를 배치할 수 없습니다: " + viewPath);
                 }
             }
         }

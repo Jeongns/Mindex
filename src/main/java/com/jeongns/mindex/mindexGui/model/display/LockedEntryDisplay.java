@@ -1,4 +1,4 @@
-package com.jeongns.mindex.mindexGui.model;
+package com.jeongns.mindex.mindexGui.model.display;
 
 import lombok.Getter;
 import lombok.NonNull;
