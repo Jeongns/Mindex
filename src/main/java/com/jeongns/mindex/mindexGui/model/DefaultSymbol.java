@@ -12,7 +12,7 @@ import java.util.List;
 public final class DefaultSymbol {
     private final char symbol;
     @NonNull
-    private final String role;
+    private final SymbolRole role;
     private final Material material;
     private final String name;
     @NonNull

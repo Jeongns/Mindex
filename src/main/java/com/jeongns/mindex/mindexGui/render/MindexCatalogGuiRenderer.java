@@ -11,6 +11,7 @@ import com.jeongns.mindex.mindexGui.model.GuiModel;
 import com.jeongns.mindex.mindexGui.model.GuiView;
 import com.jeongns.mindex.mindexGui.model.LockedEntryDisplay;
 import com.jeongns.mindex.mindexGui.model.LockedEntryDisplayMode;
+import com.jeongns.mindex.mindexGui.model.SymbolRole;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.mindexGui.view.MindexCatalogGui;
 import lombok.NonNull;
@@ -78,8 +79,8 @@ public final class MindexCatalogGuiRenderer {
 
                 DefaultSymbol defaultSymbol = guiModel.getDefaultSymbols().get(symbol);
                 if (defaultSymbol != null) {
-                    String role = defaultSymbol.getRole();
-                    if ("ENTRY_SLOT".equalsIgnoreCase(role)) {
+                    SymbolRole role = defaultSymbol.getRole();
+                    if (role == SymbolRole.ENTRY_SLOT) {
                         continue;
                     }
                     registerDefaultAction(slot, role, slotActions);
@@ -146,7 +147,7 @@ public final class MindexCatalogGuiRenderer {
             for (int col = 0; col < line.length(); col++) {
                 char symbol = line.charAt(col);
                 DefaultSymbol defaultSymbol = guiModel.getDefaultSymbols().get(symbol);
-                if (defaultSymbol != null && "ENTRY_SLOT".equalsIgnoreCase(defaultSymbol.getRole())) {
+                if (defaultSymbol != null && defaultSymbol.getRole() == SymbolRole.ENTRY_SLOT) {
                     slots.add(row * 9 + col);
                 }
             }
@@ -199,26 +200,19 @@ public final class MindexCatalogGuiRenderer {
         return Math.min(requestedPage, Math.max(0, maxPage - 1));
     }
 
-    private void registerDefaultAction(int slot, @NonNull String role, @NonNull Map<Integer, GuiAction> slotActions) {
-        if ("NEXT_PAGE".equalsIgnoreCase(role)) {
-            slotActions.put(slot, GuiAction.nextPage());
-            return;
-        }
-        if ("PREV_PAGE".equalsIgnoreCase(role)) {
-            slotActions.put(slot, GuiAction.prevPage());
-            return;
-        }
-        if ("OPEN_DEFAULT".equalsIgnoreCase(role)) {
-            slotActions.put(slot, GuiAction.openDefault());
-            return;
-        }
-        if ("CLAIM_CATEGORY_REWARD".equalsIgnoreCase(role)) {
-            slotActions.put(slot, GuiAction.claimCategoryReward());
+    private void registerDefaultAction(int slot, @NonNull SymbolRole role, @NonNull Map<Integer, GuiAction> slotActions) {
+        switch (role) {
+            case NEXT_PAGE -> slotActions.put(slot, GuiAction.nextPage());
+            case PREV_PAGE -> slotActions.put(slot, GuiAction.prevPage());
+            case OPEN_DEFAULT -> slotActions.put(slot, GuiAction.openDefault());
+            case CLAIM_CATEGORY_REWARD -> slotActions.put(slot, GuiAction.claimCategoryReward());
+            default -> {
+            }
         }
     }
 
     private ItemStack createDefaultSymbolItem(@NonNull DefaultSymbol defaultSymbol, MindexCategory currentCategory) {
-        if ("CLAIM_CATEGORY_REWARD".equalsIgnoreCase(defaultSymbol.getRole()) && currentCategory != null) {
+        if (defaultSymbol.getRole() == SymbolRole.CLAIM_CATEGORY_REWARD && currentCategory != null) {
             CategoryRewardButton rewardButton = currentCategory.getRewardButton();
             return createItem(
                     rewardButton.getMaterial(),
@@ -257,7 +251,7 @@ public final class MindexCatalogGuiRenderer {
             @NonNull CategorySymbol categorySymbol,
             @NonNull Map<Integer, GuiAction> slotActions
     ) {
-        if (!"CATEGORY_BUTTON".equalsIgnoreCase(categorySymbol.getRole())) {
+        if (categorySymbol.getRole() != SymbolRole.CATEGORY_BUTTON) {
             return;
         }
         slotActions.put(slot, GuiAction.openCategory(categorySymbol.getCategoryId()));

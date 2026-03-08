@@ -11,6 +11,7 @@ import com.jeongns.mindex.mindexGui.model.DefaultSymbol;
 import com.jeongns.mindex.mindexGui.model.GuiView;
 import com.jeongns.mindex.mindexGui.model.LockedEntryDisplay;
 import com.jeongns.mindex.mindexGui.model.LockedEntryDisplayMode;
+import com.jeongns.mindex.mindexGui.model.SymbolRole;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -144,13 +145,13 @@ public class GuiConfigLoader {
             char symbol = parseSymbol(rawSymbol, symbolsNode.getPath());
             YamlNodeReader symbolNode = symbolsNode.child(rawSymbol);
 
-            String role = ConfigValueValidator.requireString(symbolNode.getString("role"), symbolNode.pathForKey("role"));
+            String roleValue = ConfigValueValidator.requireString(symbolNode.getString("role"), symbolNode.pathForKey("role"));
             String name = symbolNode.getString("name");
             List<String> lore = symbolNode.getStringList("lore");
 
             symbols.put(symbol, new DefaultSymbol(
                     symbol,
-                    role,
+                    SymbolRole.fromConfig(roleValue),
                     ConfigValueValidator.optionalMaterial(symbolNode.getString("material"), symbolNode.pathForKey("material")),
                     name,
                     lore
@@ -167,7 +168,7 @@ public class GuiConfigLoader {
             char symbol = parseSymbol(rawSymbol, symbolsNode.getPath());
             YamlNodeReader symbolNode = symbolsNode.child(rawSymbol);
 
-            String role = ConfigValueValidator.requireString(symbolNode.getString("role"), symbolNode.pathForKey("role"));
+            String roleValue = ConfigValueValidator.requireString(symbolNode.getString("role"), symbolNode.pathForKey("role"));
             String categoryId = ConfigValueValidator.requireString(
                     symbolNode.getString("categoryId"),
                     symbolNode.pathForKey("categoryId")
@@ -177,7 +178,7 @@ public class GuiConfigLoader {
 
             symbols.put(symbol, new CategorySymbol(
                     symbol,
-                    role,
+                    SymbolRole.fromConfig(roleValue),
                     categoryId,
                     ConfigValueValidator.optionalMaterial(symbolNode.getString("material"), symbolNode.pathForKey("material")),
                     name,

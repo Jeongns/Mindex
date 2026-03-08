@@ -12,7 +12,7 @@ import java.util.List;
 public final class CategorySymbol {
     private final char symbol;
     @NonNull
-    private final String role;
+    private final SymbolRole role;
     @NonNull
     private final String categoryId;
     private final Material material;
