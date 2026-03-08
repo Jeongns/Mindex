@@ -2,7 +2,9 @@ package com.jeongns.mindex.player;
 
 import com.jeongns.mindex.manager.Manager;
 import com.jeongns.mindex.player.cache.PlayerStateCache;
-import com.jeongns.mindex.player.cache.PlayerStateCache.DirtyPlayerState;
+import com.jeongns.mindex.player.cache.PlayerStateCache.PendingPlayerStateChange;
+import com.jeongns.mindex.player.cache.PlayerStateCache.PlayerStateChange;
+import com.jeongns.mindex.player.cache.PlayerStateCache.PlayerStateChangeType;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.player.repository.PlayerStateRepository;
 import lombok.NonNull;
@@ -41,6 +43,7 @@ public class PlayerStateManager implements Manager {
 
         PlayerMindexState initialState = new PlayerMindexState(playerId, new HashSet<>(), new HashSet<>());
         cache.putIfAbsent(playerId, initialState);
+        cache.enqueueCreate(playerId);
         return initialState;
     }
 
@@ -48,7 +51,7 @@ public class PlayerStateManager implements Manager {
         PlayerMindexState playerState = find(playerId).orElseGet(() -> create(playerId));
         boolean unlocked = playerState.unlock(entryId);
         if (unlocked) {
-            cache.markDirty(playerId);
+            cache.enqueueUnlock(playerId, entryId);
         }
         return unlocked;
     }
@@ -57,23 +60,23 @@ public class PlayerStateManager implements Manager {
         PlayerMindexState playerState = find(playerId).orElseGet(() -> create(playerId));
         boolean claimed = playerState.claimCategoryReward(categoryId);
         if (claimed) {
-            cache.markDirty(playerId);
+            cache.enqueueClaimCategoryReward(playerId, categoryId);
         }
         return claimed;
     }
 
     public void save(@NonNull UUID playerId) {
-        PlayerMindexState playerState = cache.get(playerId);
-        if (playerState == null || !cache.isDirty(playerId)) {
+        List<PlayerStateChange> changes = cache.snapshotPlayerPendingChanges(playerId);
+        if (changes.isEmpty()) {
             return;
         }
-        repository.save(playerState.copy());
-        cache.clearDirty(List.of(playerId));
+        applyChanges(playerId, changes);
+        cache.clearPendingChanges(List.of(playerId));
     }
 
     public void reset(@NonNull UUID playerId) {
         cache.remove(playerId);
-        repository.deleteByPlayerId(playerId);
+        repository.reset(playerId);
     }
 
     public void unload(@NonNull UUID playerId) {
@@ -82,17 +85,35 @@ public class PlayerStateManager implements Manager {
     }
 
     public void flushDirty() {
-        List<DirtyPlayerState> dirtyEntries = cache.snapshotDirtyEntries();
-        if (dirtyEntries.isEmpty()) {
+        List<PendingPlayerStateChange> pendingChanges = cache.snapshotAllPendingChanges();
+        if (pendingChanges.isEmpty()) {
             return;
         }
-        repository.saveAll(dirtyEntries.stream().map(DirtyPlayerState::playerState).toList());
-        cache.clearDirty(dirtyEntries.stream().map(DirtyPlayerState::playerId).toList());
+        for (PendingPlayerStateChange pendingPlayerStateChange : pendingChanges) {
+            applyChanges(pendingPlayerStateChange.playerId(), pendingPlayerStateChange.changes());
+        }
+        cache.clearPendingChanges(pendingChanges.stream().map(PendingPlayerStateChange::playerId).toList());
     }
 
     @Override
     public void shutdown() {
         flushDirty();
         cache.clear();
+    }
+
+    private void applyChanges(@NonNull UUID playerId, @NonNull List<PlayerStateChange> changes) {
+        for (PlayerStateChange change : changes) {
+            if (change.type() == PlayerStateChangeType.CREATE) {
+                repository.create(playerId);
+                continue;
+            }
+            if (change.type() == PlayerStateChangeType.UNLOCK_ENTRY) {
+                repository.unlock(playerId, change.value());
+                continue;
+            }
+            if (change.type() == PlayerStateChangeType.CLAIM_CATEGORY_REWARD) {
+                repository.claimCategoryReward(playerId, change.value());
+            }
+        }
     }
 }

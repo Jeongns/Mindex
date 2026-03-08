@@ -1,17 +1,16 @@
 package com.jeongns.mindex.player.repository;
 
-import com.jeongns.mindex.player.entity.PlayerMindexState;
-
-import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface PlayerStateRepository {
-    Optional<PlayerMindexState> findByPlayerId(UUID playerId);
+    Optional<com.jeongns.mindex.player.entity.PlayerMindexState> findByPlayerId(UUID playerId);
 
-    void save(PlayerMindexState playerState);
+    void create(UUID playerId);
 
-    void saveAll(Collection<PlayerMindexState> playerStates);
+    boolean unlock(UUID playerId, String entryId);
 
-    void deleteByPlayerId(UUID playerId);
+    boolean claimCategoryReward(UUID playerId, String categoryId);
+
+    void reset(UUID playerId);
 }

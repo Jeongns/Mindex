@@ -3,7 +3,7 @@ package com.jeongns.mindex.player.repository;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import lombok.NonNull;
 
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,19 +18,26 @@ public class InMemoryPlayerStateRepository implements PlayerStateRepository {
     }
 
     @Override
-    public void save(@NonNull PlayerMindexState playerState) {
-        storage.put(playerState.getPlayerUuid(), playerState);
+    public void create(@NonNull UUID playerId) {
+        storage.putIfAbsent(playerId, new PlayerMindexState(playerId, new HashSet<>(), new HashSet<>()));
     }
 
     @Override
-    public void saveAll(@NonNull Collection<PlayerMindexState> playerStates) {
-        for (PlayerMindexState playerState : playerStates) {
-            save(playerState);
-        }
+    public boolean unlock(@NonNull UUID playerId, @NonNull String entryId) {
+        create(playerId);
+        PlayerMindexState playerState = storage.get(playerId);
+        return playerState != null && playerState.unlock(entryId);
     }
 
     @Override
-    public void deleteByPlayerId(@NonNull UUID playerId) {
+    public boolean claimCategoryReward(@NonNull UUID playerId, @NonNull String categoryId) {
+        create(playerId);
+        PlayerMindexState playerState = storage.get(playerId);
+        return playerState != null && playerState.claimCategoryReward(categoryId);
+    }
+
+    @Override
+    public void reset(@NonNull UUID playerId) {
         storage.remove(playerId);
     }
 }

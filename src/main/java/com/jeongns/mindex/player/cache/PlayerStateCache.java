@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +14,7 @@ public class PlayerStateCache {
     @NonNull
     private final Map<UUID, PlayerMindexState> cache = new ConcurrentHashMap<>();
     @NonNull
-    private final Set<UUID> dirtyPlayerIds = ConcurrentHashMap.newKeySet();
+    private final Map<UUID, List<PlayerStateChange>> pendingChanges = new ConcurrentHashMap<>();
 
     public PlayerMindexState get(@NonNull UUID playerId) {
         return cache.get(playerId);
@@ -25,50 +24,63 @@ public class PlayerStateCache {
         return cache.computeIfAbsent(playerId, ignored -> playerState);
     }
 
-    public void markDirty(@NonNull UUID playerId) {
-        dirtyPlayerIds.add(playerId);
+    public void enqueueCreate(@NonNull UUID playerId) {
+        enqueue(playerId, new PlayerStateChange(PlayerStateChangeType.CREATE, null));
     }
 
-    public boolean isDirty(@NonNull UUID playerId) {
-        return dirtyPlayerIds.contains(playerId);
+    public void enqueueUnlock(@NonNull UUID playerId, @NonNull String entryId) {
+        enqueue(playerId, new PlayerStateChange(PlayerStateChangeType.UNLOCK_ENTRY, entryId));
+    }
+
+    public void enqueueClaimCategoryReward(@NonNull UUID playerId, @NonNull String categoryId) {
+        enqueue(playerId, new PlayerStateChange(PlayerStateChangeType.CLAIM_CATEGORY_REWARD, categoryId));
+    }
+
+    private void enqueue(@NonNull UUID playerId, @NonNull PlayerStateChange change) {
+        pendingChanges.computeIfAbsent(playerId, ignored -> new ArrayList<>()).add(change);
     }
 
     public void remove(@NonNull UUID playerId) {
         cache.remove(playerId);
-        dirtyPlayerIds.remove(playerId);
+        pendingChanges.remove(playerId);
     }
 
     public void clear() {
         cache.clear();
-        dirtyPlayerIds.clear();
+        pendingChanges.clear();
     }
 
-    public List<PlayerMindexState> snapshotDirtyStates() {
-        return snapshotDirtyEntries().stream()
-                .map(DirtyPlayerState::playerState)
-                .toList();
-    }
+    public List<PendingPlayerStateChange> snapshotAllPendingChanges() {
+        List<PendingPlayerStateChange> changes = new ArrayList<>();
 
-    public List<DirtyPlayerState> snapshotDirtyEntries() {
-        List<DirtyPlayerState> entries = new ArrayList<>();
-
-        for (UUID playerId : Set.copyOf(dirtyPlayerIds)) {
-            PlayerMindexState playerState = cache.get(playerId);
-            if (playerState == null) {
-                dirtyPlayerIds.remove(playerId);
+        for (Map.Entry<UUID, List<PlayerStateChange>> entry : List.copyOf(pendingChanges.entrySet())) {
+            if (entry.getValue().isEmpty()) {
                 continue;
             }
-            PlayerMindexState snapshot = playerState.copy();
-            entries.add(new DirtyPlayerState(playerId, snapshot));
+            changes.add(new PendingPlayerStateChange(entry.getKey(), List.copyOf(entry.getValue())));
         }
 
-        return entries;
+        return changes;
     }
 
-    public void clearDirty(@NonNull Collection<UUID> playerIds) {
-        dirtyPlayerIds.removeAll(playerIds);
+    public List<PlayerStateChange> snapshotPlayerPendingChanges(@NonNull UUID playerId) {
+        List<PlayerStateChange> changes = pendingChanges.get(playerId);
+        return changes == null ? List.of() : List.copyOf(changes);
     }
 
-    public record DirtyPlayerState(UUID playerId, PlayerMindexState playerState) {
+    public void clearPendingChanges(@NonNull Collection<UUID> playerIds) {
+        playerIds.forEach(pendingChanges::remove);
+    }
+
+    public record PendingPlayerStateChange(UUID playerId, List<PlayerStateChange> changes) {
+    }
+
+    public record PlayerStateChange(PlayerStateChangeType type, String value) {
+    }
+
+    public enum PlayerStateChangeType {
+        CREATE,
+        UNLOCK_ENTRY,
+        CLAIM_CATEGORY_REWARD
     }
 }
