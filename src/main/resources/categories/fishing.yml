@@ -12,7 +12,6 @@ rewardButton:
 
 entries:
   - id: cod
-    unlockType: ITEM
     amount: 4
     name: "대구"
     description: "대구를 낚았다."
@@ -20,7 +19,6 @@ entries:
     reward: "give %player% cod 4"
 
   - id: salmon
-    unlockType: ITEM
     amount: 4
     name: "연어"
     description: "연어를 낚았다."
@@ -28,7 +26,6 @@ entries:
     reward: "give %player% salmon 4"
 
   - id: tropical_fish
-    unlockType: ITEM
     amount: 3
     name: "열대어"
     description: "알록달록한 열대어를 건져 올렸다."
@@ -36,7 +33,6 @@ entries:
     reward: "give %player% tropical_fish 3"
 
   - id: pufferfish
-    unlockType: ITEM
     amount: 2
     name: "복어"
     description: "위험한 복어를 조심히 낚아냈다."
@@ -44,7 +40,6 @@ entries:
     reward: "give %player% pufferfish 2"
 
   - id: nautilus_shell
-    unlockType: ITEM
     amount: 1
     name: "앵무조개 껍데기"
     description: "바다의 진귀한 껍데기를 손에 넣었다."
@@ -52,7 +47,6 @@ entries:
     reward: "give %player% nautilus_shell 1"
 
   - id: bowl_of_kelp
-    unlockType: ITEM
     amount: 16
     name: "켈프 다발"
     description: "낚시 중 떠내려온 해초를 모았다."
@@ -60,7 +54,6 @@ entries:
     reward: "give %player% dried_kelp 12"
 
   - id: ink_sac
-    unlockType: ITEM
     amount: 6
     name: "먹물주머니"
     description: "먹물주머니를 챙겨 왔다."
@@ -68,7 +61,6 @@ entries:
     reward: "give %player% ink_sac 6"
 
   - id: string_bundle
-    unlockType: ITEM
     amount: 8
     name: "낚싯줄 뭉치"
     description: "낚싯줄과 함께 건져 올린 잡동사니를 정리했다."
@@ -76,7 +68,6 @@ entries:
     reward: "give %player% string 10"
 
   - id: bone
-    unlockType: ITEM
     amount: 5
     name: "뼈 조각"
     description: "수면 위를 떠다니던 뼈 조각을 주웠다."

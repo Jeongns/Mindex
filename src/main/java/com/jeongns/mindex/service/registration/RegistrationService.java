@@ -2,7 +2,6 @@ package com.jeongns.mindex.service.registration;
 
 import com.jeongns.mindex.catalog.CatalogManager;
 import com.jeongns.mindex.catalog.entity.MindexEntry;
-import com.jeongns.mindex.catalog.entity.UnlockType;
 import com.jeongns.mindex.player.PlayerStateManager;
 import com.jeongns.mindex.service.reward.RewardExecutor;
 import lombok.NonNull;
@@ -37,10 +36,6 @@ public class RegistrationService {
         }
 
         MindexEntry entry = entryOptional.get();
-        if (entry.getUnlockType() != UnlockType.ITEM) {
-            throw new IllegalStateException("지원하지 않는 unlockType입니다: entryId="
-                    + entry.getId() + ", unlockType=" + entry.getUnlockType());
-        }
         if (!canRegister(player, entry)) {
             return RegistrationStatus.REQUIREMENT_NOT_MET;
         }

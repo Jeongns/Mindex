@@ -13,7 +13,6 @@ rewardButton:
 
 entries:
   - id: coal
-    unlockType: ITEM
     amount: 16
     name: "석탄"
     description: "석탄 광석을 채굴했다."
@@ -23,7 +22,6 @@ entries:
       - "effect give %player% speed 5 0 true"
 
   - id: iron
-    unlockType: ITEM
     amount: 8
     name: "철"
     description: "철 광석을 채굴했다."
@@ -31,7 +29,6 @@ entries:
     reward: "give %player% iron_ingot 8"
 
   - id: copper
-    unlockType: ITEM
     amount: 12
     name: "구리"
     description: "구리를 캐내 도감에 기록했다."
@@ -39,7 +36,6 @@ entries:
     reward: "give %player% copper_ingot 12"
 
   - id: gold
-    unlockType: ITEM
     amount: 6
     name: "금"
     description: "금 광맥을 찾아 제련까지 마쳤다."
@@ -47,7 +43,6 @@ entries:
     reward: "give %player% golden_apple 1"
 
   - id: lapis
-    unlockType: ITEM
     amount: 20
     name: "청금석"
     description: "푸른 광석 조각을 모았다."
@@ -55,7 +50,6 @@ entries:
     reward: "give %player% lapis_lazuli 24"
 
   - id: redstone
-    unlockType: ITEM
     amount: 24
     name: "레드스톤"
     description: "붉은 가루를 잔뜩 채집했다."
@@ -63,7 +57,6 @@ entries:
     reward: "give %player% redstone 32"
 
   - id: diamond
-    unlockType: ITEM
     amount: 3
     name: "다이아몬드"
     description: "반짝이는 다이아몬드를 발견했다."
@@ -71,7 +64,6 @@ entries:
     reward: "give %player% diamond 2"
 
   - id: emerald
-    unlockType: ITEM
     amount: 2
     name: "에메랄드"
     description: "희귀한 녹빛 보석을 얻었다."
@@ -79,7 +71,6 @@ entries:
     reward: "give %player% emerald 3"
 
   - id: quartz
-    unlockType: ITEM
     amount: 12
     name: "석영"
     description: "네더 석영을 캐서 정리했다."
@@ -87,7 +78,6 @@ entries:
     reward: "give %player% quartz 16"
 
   - id: ancient_debris
-    unlockType: ITEM
     amount: 1
     name: "고대 잔해"
     description: "네더라이트의 흔적을 찾아냈다."
