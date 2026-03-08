@@ -77,28 +77,12 @@ public class MindexGuiManager implements Manager {
         applyGuiSettings(configLoader.load());
     }
 
-    public void applyGuiModel(@NonNull GuiModel guiModel) {
-        this.guiModel = guiModel;
-    }
-
-    public void applyLockedEntryDisplay(@NonNull LockedEntryDisplay lockedEntryDisplay) {
-        this.lockedEntryDisplay = lockedEntryDisplay;
-    }
-
-    public void applyGuiSoundSettings(@NonNull GuiSoundSettings guiSoundSettings) {
-        this.guiSoundSettings = guiSoundSettings;
-    }
-
-    public void applyGuiMessageSettings(@NonNull GuiMessageSettings guiMessageSettings) {
-        this.guiMessageSettings = guiMessageSettings;
-    }
-
     public void applyGuiSettings(@NonNull GuiSettings guiSettings) {
         validateCategorySymbols(guiSettings.getGuiModel());
-        applyGuiModel(guiSettings.getGuiModel());
-        applyLockedEntryDisplay(guiSettings.getLockedEntryDisplay());
-        applyGuiSoundSettings(guiSettings.getGuiSoundSettings());
-        applyGuiMessageSettings(guiSettings.getGuiMessageSettings());
+        this.guiModel = guiSettings.getGuiModel();
+        this.lockedEntryDisplay = guiSettings.getLockedEntryDisplay();
+        this.guiSoundSettings = guiSettings.getGuiSoundSettings();
+        this.guiMessageSettings = guiSettings.getGuiMessageSettings();
     }
 
     public void openDefault(@NonNull Player player) {

@@ -4,13 +4,13 @@ import com.jeongns.mindex.catalog.entity.MindexCatalog;
 import com.jeongns.mindex.mindexGui.action.GuiAction;
 import com.jeongns.mindex.mindexGui.interaction.MindexCatalogGuiInteractionHandler;
 import com.jeongns.mindex.mindexGui.model.config.GuiMessageSettings;
-import com.jeongns.mindex.mindexGui.model.layout.GuiModel;
 import com.jeongns.mindex.mindexGui.model.config.GuiSoundSettings;
+import com.jeongns.mindex.mindexGui.model.layout.GuiModel;
 import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplay;
-import com.jeongns.mindex.player.PlayerStateManager;
-import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.mindexGui.render.CatalogGuiRenderResult;
 import com.jeongns.mindex.mindexGui.render.MindexCatalogGuiRenderer;
+import com.jeongns.mindex.player.PlayerStateManager;
+import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.service.registration.RegistrationService;
 import com.jeongns.mindex.service.reward.CategoryRewardService;
 import lombok.NonNull;
@@ -19,21 +19,17 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import java.util.logging.Logger;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public final class MindexCatalogGui implements InventoryHolder {
     private final UUID ownerUuid;
     private final MindexCatalog catalog;
     private final GuiModel guiModel;
     private final LockedEntryDisplay lockedEntryDisplay;
-    private final GuiSoundSettings guiSoundSettings;
-    private final GuiMessageSettings guiMessageSettings;
     private final PlayerStateManager playerStateManager;
-    private final Logger logger;
     private final MindexCatalogGuiRenderer renderer;
     private final MindexCatalogGuiInteractionHandler interactionHandler;
     private final Map<Integer, GuiAction> slotActions;
@@ -58,10 +54,7 @@ public final class MindexCatalogGui implements InventoryHolder {
         this.catalog = catalog;
         this.guiModel = guiModel;
         this.lockedEntryDisplay = lockedEntryDisplay;
-        this.guiSoundSettings = guiSoundSettings;
-        this.guiMessageSettings = guiMessageSettings;
         this.playerStateManager = playerStateManager;
-        this.logger = logger;
         this.renderer = new MindexCatalogGuiRenderer();
         this.interactionHandler = new MindexCatalogGuiInteractionHandler(
                 registrationService,
