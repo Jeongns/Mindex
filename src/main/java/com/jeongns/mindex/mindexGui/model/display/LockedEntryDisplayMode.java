@@ -11,7 +11,7 @@ public enum LockedEntryDisplayMode {
     public static LockedEntryDisplayMode fromConfig(@NonNull String rawValue) {
         String normalized = rawValue.trim();
         if (normalized.isEmpty()) {
-            throw new IllegalArgumentException("mindexGui.locked-entry-display.mode 값이 비어 있습니다.");
+            throw new IllegalArgumentException("locked-entry-display.mode 값이 비어 있습니다.");
         }
 
         try {

@@ -1,35 +1,31 @@
-schemaVersion: 1
+locked-entry-display:
+  mode: FIXED_ITEM
+  material: BARRIER
+  custom-model-data:
+sounds:
+  menu-select:
+    enabled: true
+    sound: minecraft:ui.button.click
+    volume: 1.0
+    pitch: 1.0
+  registration-success:
+    enabled: true
+    sound: minecraft:entity.player.levelup
+    volume: 1.0
+    pitch: 1.2
+  registration-fail:
+    enabled: true
+    sound: minecraft:entity.villager.no
+    volume: 1.0
+    pitch: 1.0
+messages:
+  registration:
+    success: "&a도감이 등록되었습니다: %entry_id%"
+    already-registered: "&e이미 등록된 도감입니다."
+    requirement-not-met: "&c등록 조건을 만족하지 못했습니다."
+  category-reward:
+    success: "&a카테고리 완료 보상을 수령했습니다."
+    not-complete: "&c아직 이 카테고리를 모두 완성하지 못했습니다."
+    already-claimed: "&e이미 이 카테고리 보상을 수령했습니다."
 
-player-state:
-  auto-save-interval-minutes: 1
-
-mindexGui:
-  locked-entry-display:
-    mode: FIXED_ITEM
-    material: BARRIER
-    custom-model-data:
-  sounds:
-    menu-select:
-      enabled: true
-      sound: minecraft:ui.button.click
-      volume: 1.0
-      pitch: 1.0
-    registration-success:
-      enabled: true
-      sound: minecraft:entity.player.levelup
-      volume: 1.0
-      pitch: 1.2
-    registration-fail:
-      enabled: true
-      sound: minecraft:entity.villager.no
-      volume: 1.0
-      pitch: 1.0
-  messages:
-    registration:
-      success: "&a도감이 등록되었습니다: %entry_id%"
-      already-registered: "&e이미 등록된 도감입니다."
-      requirement-not-met: "&c등록 조건을 만족하지 못했습니다."
-    category-reward:
-      success: "&a카테고리 완료 보상을 수령했습니다."
-      not-complete: "&c아직 이 카테고리를 모두 완성하지 못했습니다."
-      already-claimed: "&e이미 이 카테고리 보상을 수령했습니다."
+auto-save-interval-minutes: 1

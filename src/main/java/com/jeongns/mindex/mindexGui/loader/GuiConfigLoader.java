@@ -50,14 +50,12 @@ public class GuiConfigLoader {
 
     private GuiModel loadGuiModel() {
         YamlConfiguration config = loadConfig();
-        YamlNodeReader gui = YamlNodeReader.root(config, "gui");
-
-        Map<Character, DefaultSymbol> defaultSymbols = loadDefaultSymbols(gui.child("defaultSymbols"));
-        Map<Character, CategorySymbol> categorySymbols = loadCategorySymbols(gui.child("categorySymbols"));
+        Map<Character, DefaultSymbol> defaultSymbols = loadDefaultSymbols(YamlNodeReader.root(config, "defaultSymbols"));
+        Map<Character, CategorySymbol> categorySymbols = loadCategorySymbols(YamlNodeReader.root(config, "categorySymbols"));
         validateDuplicateSymbols(defaultSymbols, categorySymbols);
 
-        YamlNodeReader defaultViewNode = gui.child("defaultView");
-        YamlNodeReader entryViewNode = gui.child("entryView");
+        YamlNodeReader defaultViewNode = YamlNodeReader.root(config, "defaultView");
+        YamlNodeReader entryViewNode = YamlNodeReader.root(config, "entryView");
         GuiView defaultView = loadView(defaultViewNode);
         GuiView entryView = loadView(entryViewNode);
 
@@ -75,19 +73,19 @@ public class GuiConfigLoader {
 
     private LockedEntryDisplay loadLockedEntryDisplay() {
         String modeValue = plugin.getConfig().getString(
-                "mindexGui.locked-entry-display.mode",
+                "locked-entry-display.mode",
                 LockedEntryDisplayMode.FIXED_ITEM.name()
         );
         LockedEntryDisplayMode mode = LockedEntryDisplayMode.fromConfig(modeValue);
 
-        String materialName = plugin.getConfig().getString("mindexGui.locked-entry-display.material", "GRAY_DYE");
+        String materialName = plugin.getConfig().getString("locked-entry-display.material", "GRAY_DYE");
         Material material = Material.matchMaterial(materialName == null ? "GRAY_DYE" : materialName);
         if (material == null) {
             throw new IllegalArgumentException("유효하지 않은 잠금 엔트리 material: " + materialName);
         }
 
-        Integer customModelData = plugin.getConfig().contains("mindexGui.locked-entry-display.custom-model-data")
-                ? plugin.getConfig().getInt("mindexGui.locked-entry-display.custom-model-data")
+        Integer customModelData = plugin.getConfig().contains("locked-entry-display.custom-model-data")
+                ? plugin.getConfig().getInt("locked-entry-display.custom-model-data")
                 : null;
 
         return new LockedEntryDisplay(mode, material, customModelData);
@@ -95,21 +93,21 @@ public class GuiConfigLoader {
 
     private GuiSoundSettings loadGuiSoundSettings() {
         return new GuiSoundSettings(
-                loadGuiSoundSetting("mindexGui.sounds.menu-select", GuiSoundSettings.defaultValue().getMenuSelect()),
-                loadGuiSoundSetting("mindexGui.sounds.registration-success", GuiSoundSettings.defaultValue().getRegistrationSuccess()),
-                loadGuiSoundSetting("mindexGui.sounds.registration-fail", GuiSoundSettings.defaultValue().getRegistrationFail())
+                loadGuiSoundSetting("sounds.menu-select", GuiSoundSettings.defaultValue().getMenuSelect()),
+                loadGuiSoundSetting("sounds.registration-success", GuiSoundSettings.defaultValue().getRegistrationSuccess()),
+                loadGuiSoundSetting("sounds.registration-fail", GuiSoundSettings.defaultValue().getRegistrationFail())
         );
     }
 
     private GuiMessageSettings loadGuiMessageSettings() {
         GuiMessageSettings defaultValue = GuiMessageSettings.defaultValue();
         return new GuiMessageSettings(
-                plugin.getConfig().getString("mindexGui.messages.registration.success", defaultValue.getRegistrationSuccess()),
-                plugin.getConfig().getString("mindexGui.messages.registration.already-registered", defaultValue.getRegistrationAlreadyRegistered()),
-                plugin.getConfig().getString("mindexGui.messages.registration.requirement-not-met", defaultValue.getRegistrationRequirementNotMet()),
-                plugin.getConfig().getString("mindexGui.messages.category-reward.success", defaultValue.getCategoryRewardSuccess()),
-                plugin.getConfig().getString("mindexGui.messages.category-reward.not-complete", defaultValue.getCategoryRewardNotComplete()),
-                plugin.getConfig().getString("mindexGui.messages.category-reward.already-claimed", defaultValue.getCategoryRewardAlreadyClaimed())
+                plugin.getConfig().getString("messages.registration.success", defaultValue.getRegistrationSuccess()),
+                plugin.getConfig().getString("messages.registration.already-registered", defaultValue.getRegistrationAlreadyRegistered()),
+                plugin.getConfig().getString("messages.registration.requirement-not-met", defaultValue.getRegistrationRequirementNotMet()),
+                plugin.getConfig().getString("messages.category-reward.success", defaultValue.getCategoryRewardSuccess()),
+                plugin.getConfig().getString("messages.category-reward.not-complete", defaultValue.getCategoryRewardNotComplete()),
+                plugin.getConfig().getString("messages.category-reward.already-claimed", defaultValue.getCategoryRewardAlreadyClaimed())
         );
     }
 

@@ -1,71 +1,68 @@
-schemaVersion: 1
+defaultSymbols:
+  "#":
+    role: BORDER
+    material: GRAY_STAINED_GLASS_PANE
+    name: " "
+  "E":
+    role: ENTRY_SLOT
+    material: PAPER
+    name: "&7도감 엔트리"
+  "<":
+    role: PREV_PAGE
+    material: ARROW
+    name: "&e이전 페이지"
+  ">":
+    role: NEXT_PAGE
+    material: ARROW
+    name: "&e다음 페이지"
+  "D":
+    role: OPEN_DEFAULT
+    material: COMPASS
+    name: "&e카테고리 선택으로"
+  "R":
+    role: CLAIM_CATEGORY_REWARD
+    material: CHEST
+    name: "&6카테고리 완료 보상"
+    lore:
+      - "&7현재 카테고리를 완성하면"
+      - "&7이 버튼으로 보상을 수령합니다."
 
-gui:
-  defaultSymbols:
-    "#":
-      role: BORDER
-      material: GRAY_STAINED_GLASS_PANE
-      name: " "
-    "E":
-      role: ENTRY_SLOT
-      material: PAPER
-      name: "&7도감 엔트리"
-    "<":
-      role: PREV_PAGE
-      material: ARROW
-      name: "&e이전 페이지"
-    ">":
-      role: NEXT_PAGE
-      material: ARROW
-      name: "&e다음 페이지"
-    "D":
-      role: OPEN_DEFAULT
-      material: COMPASS
-      name: "&e카테고리 선택으로"
-    "R":
-      role: CLAIM_CATEGORY_REWARD
-      material: CHEST
-      name: "&6카테고리 완료 보상"
-      lore:
-        - "&7현재 카테고리를 완성하면"
-        - "&7이 버튼으로 보상을 수령합니다."
+# defaultView 에서 사용되는 카테고리 버튼 심볼
+categorySymbols:
+  "M":
+    role: CATEGORY_BUTTON
+    categoryId: mining
+    material: DIAMOND_PICKAXE
+    name: "&b광물 도감"
+    lore:
+      - "&7광물 카테고리 보기"
+  "F":
+    role: CATEGORY_BUTTON
+    categoryId: fishing
+    material: FISHING_ROD
+    name: "&3낚시 도감"
+    lore:
+      - "&7낚시 카테고리 보기"
 
-  # defaultView 에서 사용되는 카테고리 버튼 심볼
-  categorySymbols:
-    "M":
-      role: CATEGORY_BUTTON
-      categoryId: mining
-      material: DIAMOND_PICKAXE
-      name: "&b광물 도감"
-      lore:
-        - "&7광물 카테고리 보기"
-    "F":
-      role: CATEGORY_BUTTON
-      categoryId: fishing
-      material: FISHING_ROD
-      name: "&3낚시 도감"
-      lore:
-        - "&7낚시 카테고리 보기"
+entryView:
+  title: "&6도감 - %category_name% &7(%page%/%max_page%)"
+  rows: 6
+  # categories/*.yml 에 gui.layout 이 있으면 해당 레이아웃을 우선 사용
+  layout:
+    - "#########"
+    - "#EEEEEEE#"
+    - "#EEEEEEE#"
+    - "#EEEEEEE#"
+    - "#EEEEEEE#"
+    - "#<#D#R#>#"
 
-  entryView:
-    title: "&6도감 - %category_name% &7(%page%/%max_page%)"
-    rows: 6
-    # categories/*.yml 에 gui.layout 이 있으면 해당 레이아웃을 우선 사용
-    layout:
-      - "#########"
-      - "#EEEEEEE#"
-      - "#EEEEEEE#"
-      - "#EEEEEEE#"
-      - "#EEEEEEE#"
-      - "#<#D#R#>#"
-
-  defaultView:
-    title: "&6도감 카테고리"
-    rows: 6
-    layout:
-      - "#########"
-      - "#M.....F#"
-      - "#.......#"
-      - "#.......#"
-      - "#.......#"
-      - "#########"
+defaultView:
+  title: "&6도감 카테고리"
+  rows: 6
+  layout:
+    - "#########"
+    - "#M.....F#"
+    - "#.......#"
+    - "#.......#"
+    - "#.......#"
+    - "#########"

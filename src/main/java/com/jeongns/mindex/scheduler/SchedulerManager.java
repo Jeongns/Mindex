@@ -44,7 +44,7 @@ public class SchedulerManager implements Manager {
             autoSaveTask.cancel();
         }
 
-        int intervalMinutes = Math.max(0, plugin.getConfig().getInt("player-state.auto-save-interval-minutes", 1));
+        int intervalMinutes = Math.max(0, plugin.getConfig().getInt("auto-save-interval-minutes", 1));
         if (intervalMinutes <= 0) {
             return;
         }
