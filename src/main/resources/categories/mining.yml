@@ -12,7 +12,7 @@ rewardButton:
     - "&7이 버튼으로 보상을 수령합니다."
 
 entries:
-  - id: mining.coal
+  - id: coal
     unlockType: ITEM
     amount: 16
     name: "석탄"
@@ -22,7 +22,7 @@ entries:
       - "exp give %player% 2 levels"
       - "effect give %player% speed 5 0 true"
 
-  - id: mining.iron
+  - id: iron
     unlockType: ITEM
     amount: 8
     name: "철"
@@ -30,7 +30,7 @@ entries:
     material: IRON_INGOT
     reward: "give %player% iron_ingot 8"
 
-  - id: mining.copper
+  - id: copper
     unlockType: ITEM
     amount: 12
     name: "구리"
@@ -38,7 +38,7 @@ entries:
     material: COPPER_INGOT
     reward: "give %player% copper_ingot 12"
 
-  - id: mining.gold
+  - id: gold
     unlockType: ITEM
     amount: 6
     name: "금"
@@ -46,7 +46,7 @@ entries:
     material: GOLD_INGOT
     reward: "give %player% golden_apple 1"
 
-  - id: mining.lapis
+  - id: lapis
     unlockType: ITEM
     amount: 20
     name: "청금석"
@@ -54,7 +54,7 @@ entries:
     material: LAPIS_LAZULI
     reward: "give %player% lapis_lazuli 24"
 
-  - id: mining.redstone
+  - id: redstone
     unlockType: ITEM
     amount: 24
     name: "레드스톤"
@@ -62,7 +62,7 @@ entries:
     material: REDSTONE
     reward: "give %player% redstone 32"
 
-  - id: mining.diamond
+  - id: diamond
     unlockType: ITEM
     amount: 3
     name: "다이아몬드"
@@ -70,7 +70,7 @@ entries:
     material: DIAMOND
     reward: "give %player% diamond 2"
 
-  - id: mining.emerald
+  - id: emerald
     unlockType: ITEM
     amount: 2
     name: "에메랄드"
@@ -78,7 +78,7 @@ entries:
     material: EMERALD
     reward: "give %player% emerald 3"
 
-  - id: mining.quartz
+  - id: quartz
     unlockType: ITEM
     amount: 12
     name: "석영"
@@ -86,7 +86,7 @@ entries:
     material: QUARTZ
     reward: "give %player% quartz 16"
 
-  - id: mining.ancient_debris
+  - id: ancient_debris
     unlockType: ITEM
     amount: 1
     name: "고대 잔해"

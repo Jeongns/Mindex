@@ -7,6 +7,7 @@ import com.jeongns.mindex.catalog.entity.UnlockType;
 import com.jeongns.mindex.config.validation.ConfigValueValidator;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -118,8 +119,8 @@ public class CatalogConfigLoader {
     private MindexEntry toEntry(@NonNull String categoryId, @NonNull Map<?, ?> row) {
         String materialName = ConfigValueValidator.requireString(valueAsString(row.get("material")), "entries.material");
         var material = ConfigValueValidator.parseMaterial(materialName);
-        String configuredId = ConfigValueValidator.optionalString(valueAsString(row.get("id")), "");
-        String entryId = configuredId.isEmpty() ? categoryId + "." + material.name() : configuredId;
+        String configuredId = ConfigValueValidator.requireString(valueAsString(row.get("id")), "entries.id");
+        String entryId = buildEntryId(categoryId, configuredId);
 
         return new MindexEntry(
                 entryId,
@@ -136,6 +137,10 @@ public class CatalogConfigLoader {
                 parsePositiveAmount(row.get("amount"), "entries.amount", 1),
                 parseRewardCommands(row.get("reward"), "entries.reward")
         );
+    }
+
+    private String buildEntryId(@NonNull String categoryId, @NonNull String configuredId) {
+        return categoryId + "." + configuredId.toLowerCase(Locale.ROOT);
     }
 
     private List<String> parseRewardCommands(Object rawValue, @NonNull String fieldName) {

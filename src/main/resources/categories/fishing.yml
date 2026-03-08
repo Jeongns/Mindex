@@ -11,7 +11,7 @@ rewardButton:
     - "&7이 버튼으로 보상을 수령합니다."
 
 entries:
-  - id: fishing.cod
+  - id: cod
     unlockType: ITEM
     amount: 4
     name: "대구"
@@ -19,7 +19,7 @@ entries:
     material: COD
     reward: "give %player% cod 4"
 
-  - id: fishing.salmon
+  - id: salmon
     unlockType: ITEM
     amount: 4
     name: "연어"
@@ -27,7 +27,7 @@ entries:
     material: SALMON
     reward: "give %player% salmon 4"
 
-  - id: fishing.tropical_fish
+  - id: tropical_fish
     unlockType: ITEM
     amount: 3
     name: "열대어"
@@ -35,7 +35,7 @@ entries:
     material: TROPICAL_FISH
     reward: "give %player% tropical_fish 3"
 
-  - id: fishing.pufferfish
+  - id: pufferfish
     unlockType: ITEM
     amount: 2
     name: "복어"
@@ -43,7 +43,7 @@ entries:
     material: PUFFERFISH
     reward: "give %player% pufferfish 2"
 
-  - id: fishing.nautilus_shell
+  - id: nautilus_shell
     unlockType: ITEM
     amount: 1
     name: "앵무조개 껍데기"
@@ -51,7 +51,7 @@ entries:
     material: NAUTILUS_SHELL
     reward: "give %player% nautilus_shell 1"
 
-  - id: fishing.bowl_of_kelp
+  - id: bowl_of_kelp
     unlockType: ITEM
     amount: 16
     name: "켈프 다발"
@@ -59,7 +59,7 @@ entries:
     material: KELP
     reward: "give %player% dried_kelp 12"
 
-  - id: fishing.ink_sac
+  - id: ink_sac
     unlockType: ITEM
     amount: 6
     name: "먹물주머니"
@@ -67,7 +67,7 @@ entries:
     material: INK_SAC
     reward: "give %player% ink_sac 6"
 
-  - id: fishing.string_bundle
+  - id: string_bundle
     unlockType: ITEM
     amount: 8
     name: "낚싯줄 뭉치"
@@ -75,7 +75,7 @@ entries:
     material: STRING
     reward: "give %player% string 10"
 
-  - id: fishing.bone
+  - id: bone
     unlockType: ITEM
     amount: 5
     name: "뼈 조각"
