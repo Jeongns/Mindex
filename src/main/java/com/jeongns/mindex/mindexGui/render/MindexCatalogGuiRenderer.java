@@ -293,7 +293,9 @@ public final class MindexCatalogGuiRenderer {
                 itemMeta.lore(MiniMessageUtil.parse(lore));
             }
             if (customModelData != null) {
-                itemMeta.setCustomModelData(customModelData);
+                CustomModelDataComponent customModelDataComponent = itemMeta.getCustomModelDataComponent();
+                customModelDataComponent.setFloats(List.of(customModelData.floatValue()));
+                itemMeta.setCustomModelDataComponent(customModelDataComponent);
             }
             itemStack.setItemMeta(itemMeta);
         }

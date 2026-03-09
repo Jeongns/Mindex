@@ -8,6 +8,7 @@ import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 
 import java.util.Optional;
 
@@ -72,13 +73,25 @@ public class RegistrationService {
 
         ItemMeta itemMeta = itemStack.getItemMeta();
         Integer requiredCustomModelData = entry.getCustomModelData();
+        Integer itemCustomModelData = extractCustomModelData(itemMeta);
+
         if (requiredCustomModelData == null) {
-            return itemMeta == null || !itemMeta.hasCustomModelData();
+            return itemCustomModelData == null;
         }
 
-        return itemMeta != null
-                && itemMeta.hasCustomModelData()
-                && itemMeta.getCustomModelData() == requiredCustomModelData;
+        return requiredCustomModelData.equals(itemCustomModelData);
+    }
+
+    private Integer extractCustomModelData(ItemMeta itemMeta) {
+        if (itemMeta == null) {
+            return null;
+        }
+
+        CustomModelDataComponent customModelDataComponent = itemMeta.getCustomModelDataComponent();
+        if (customModelDataComponent.getFloats().isEmpty()) {
+            return null;
+        }
+        return customModelDataComponent.getFloats().get(0).intValue();
     }
 
     private void consumeItems(@NonNull Player player, @NonNull MindexEntry entry) {
