@@ -6,10 +6,10 @@ reward:
 
 rewardButton:
   material: CHEST
-  name: "&b광물 카테고리 완료 보상"
+  name: "<aqua>광물 카테고리 완료 보상"
   lore:
-    - "&7광물 카테고리를 모두 완성하면"
-    - "&7이 버튼으로 보상을 수령합니다."
+    - "<gray>광물 카테고리를 모두 완성하면"
+    - "<gray>이 버튼으로 보상을 수령합니다."
 
 entries:
   - id: coal

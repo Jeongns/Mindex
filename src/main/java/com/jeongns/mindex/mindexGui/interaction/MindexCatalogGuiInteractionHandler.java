@@ -9,8 +9,9 @@ import com.jeongns.mindex.service.registration.RegistrationService;
 import com.jeongns.mindex.service.registration.RegistrationStatus;
 import com.jeongns.mindex.service.reward.CategoryRewardService;
 import com.jeongns.mindex.service.reward.CategoryRewardStatus;
+import com.jeongns.mindex.util.MiniMessageUtil;
 import lombok.NonNull;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
@@ -90,17 +91,20 @@ public final class MindexCatalogGuiInteractionHandler {
             case SUCCESS -> {
                 gui.refresh();
                 playSound(player, guiSoundSettings.getRegistrationSuccess());
-                player.sendMessage(colorize(guiMessageSettings.getRegistrationSuccess().replace("%entry_id%", entryId)));
+                player.sendMessage(MiniMessageUtil.parse(
+                        guiMessageSettings.getRegistrationSuccess(),
+                        Placeholder.unparsed("entry_id", entryId)
+                ));
                 yield true;
             }
             case ALREADY_REGISTERED -> {
                 playSound(player, guiSoundSettings.getRegistrationFail());
-                player.sendMessage(colorize(guiMessageSettings.getRegistrationAlreadyRegistered()));
+                player.sendMessage(MiniMessageUtil.parse(guiMessageSettings.getRegistrationAlreadyRegistered()));
                 yield false;
             }
             case REQUIREMENT_NOT_MET -> {
                 playSound(player, guiSoundSettings.getRegistrationFail());
-                player.sendMessage(colorize(guiMessageSettings.getRegistrationRequirementNotMet()));
+                player.sendMessage(MiniMessageUtil.parse(guiMessageSettings.getRegistrationRequirementNotMet()));
                 yield false;
             }
             case ENTRY_NOT_FOUND -> {
@@ -122,7 +126,7 @@ public final class MindexCatalogGuiInteractionHandler {
         return switch (status) {
             case SUCCESS -> {
                 playSound(player, guiSoundSettings.getRegistrationSuccess());
-                player.sendMessage(colorize(guiMessageSettings.getCategoryRewardSuccess()));
+                player.sendMessage(MiniMessageUtil.parse(guiMessageSettings.getCategoryRewardSuccess()));
                 yield true;
             }
             case CATEGORY_NOT_FOUND -> {
@@ -131,12 +135,12 @@ public final class MindexCatalogGuiInteractionHandler {
             }
             case CATEGORY_NOT_COMPLETE -> {
                 playSound(player, guiSoundSettings.getRegistrationFail());
-                player.sendMessage(colorize(guiMessageSettings.getCategoryRewardNotComplete()));
+                player.sendMessage(MiniMessageUtil.parse(guiMessageSettings.getCategoryRewardNotComplete()));
                 yield false;
             }
             case ALREADY_CLAIMED -> {
                 playSound(player, guiSoundSettings.getRegistrationFail());
-                player.sendMessage(colorize(guiMessageSettings.getCategoryRewardAlreadyClaimed()));
+                player.sendMessage(MiniMessageUtil.parse(guiMessageSettings.getCategoryRewardAlreadyClaimed()));
                 yield false;
             }
         };
@@ -147,9 +151,5 @@ public final class MindexCatalogGuiInteractionHandler {
             return;
         }
         player.playSound(player.getLocation(), soundSetting.getSound(), soundSetting.getVolume(), soundSetting.getPitch());
-    }
-
-    private String colorize(@NonNull String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
     }
 }

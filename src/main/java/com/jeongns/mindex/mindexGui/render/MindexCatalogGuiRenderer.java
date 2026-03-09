@@ -14,14 +14,16 @@ import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplayMode;
 import com.jeongns.mindex.mindexGui.model.layout.SymbolRole;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.mindexGui.view.MindexCatalogGui;
+import com.jeongns.mindex.util.MiniMessageUtil;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,8 +52,8 @@ public final class MindexCatalogGuiRenderer {
         int maxPage = computeMaxPage(entries.size(), pageSize);
         int page = normalizePage(requestedPage, maxPage);
 
-        String resolvedTitle = resolveTitle(catalog, view.getTitle(), categoryId, page, maxPage);
-        Inventory inventory = Bukkit.createInventory(holder, view.getRows() * 9, Component.text(resolvedTitle));
+        Component resolvedTitle = resolveTitle(catalog, view.getTitle(), categoryId, page, maxPage);
+        Inventory inventory = Bukkit.createInventory(holder, view.getRows() * 9, resolvedTitle);
         MindexCategory currentCategory = findCategory(catalog, categoryId);
 
         renderBaseLayout(guiModel, view, inventory, slotActions, currentCategory);
@@ -160,7 +162,7 @@ public final class MindexCatalogGuiRenderer {
         return category == null ? Collections.emptyList() : category.getEntries();
     }
 
-    private String resolveTitle(
+    private Component resolveTitle(
             @NonNull MindexCatalog catalog,
             @NonNull String rawTitle,
             String currentCategoryId,
@@ -168,11 +170,12 @@ public final class MindexCatalogGuiRenderer {
             int maxPage
     ) {
         String categoryName = resolveCategoryName(catalog, currentCategoryId);
-        String resolved = rawTitle
-                .replace("%category_name%", categoryName)
-                .replace("%page%", String.valueOf(page + 1))
-                .replace("%max_page%", String.valueOf(maxPage));
-        return colorize(resolved);
+        return MiniMessageUtil.parse(
+                rawTitle,
+                Placeholder.unparsed("category_name", categoryName),
+                Placeholder.unparsed("page", String.valueOf(page + 1)),
+                Placeholder.unparsed("max_page", String.valueOf(maxPage))
+        );
     }
 
     private String resolveCategoryName(@NonNull MindexCatalog catalog, String currentCategoryId) {
@@ -284,10 +287,10 @@ public final class MindexCatalogGuiRenderer {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
             if (name != null) {
-                itemMeta.setDisplayName(colorize(name));
+                itemMeta.displayName(MiniMessageUtil.parse(name));
             }
             if (lore != null && !lore.isEmpty()) {
-                itemMeta.setLore(lore.stream().map(this::colorize).toList());
+                itemMeta.lore(MiniMessageUtil.parse(lore));
             }
             if (customModelData != null) {
                 itemMeta.setCustomModelData(customModelData);
@@ -295,9 +298,5 @@ public final class MindexCatalogGuiRenderer {
             itemStack.setItemMeta(itemMeta);
         }
         return itemStack;
-    }
-
-    private String colorize(@NonNull String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
     }
 }

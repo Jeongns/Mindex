@@ -5,10 +5,10 @@ reward:
 
 rewardButton:
   material: BARREL
-  name: "&3낚시 카테고리 완료 보상"
+  name: "<dark_aqua>낚시 카테고리 완료 보상"
   lore:
-    - "&7낚시 카테고리를 모두 완성하면"
-    - "&7이 버튼으로 보상을 수령합니다."
+    - "<gray>낚시 카테고리를 모두 완성하면"
+    - "<gray>이 버튼으로 보상을 수령합니다."
 
 entries:
   - id: cod
