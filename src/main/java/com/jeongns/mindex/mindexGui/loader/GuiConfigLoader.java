@@ -2,17 +2,13 @@ package com.jeongns.mindex.mindexGui.loader;
 
 import com.jeongns.mindex.config.YamlNodeReader;
 import com.jeongns.mindex.config.validation.ConfigValueValidator;
-import com.jeongns.mindex.mindexGui.model.config.GuiSettings;
-import com.jeongns.mindex.mindexGui.model.layout.GuiModel;
 import com.jeongns.mindex.mindexGui.model.config.GuiMessageSettings;
+import com.jeongns.mindex.mindexGui.model.config.GuiSettings;
 import com.jeongns.mindex.mindexGui.model.config.GuiSoundSetting;
 import com.jeongns.mindex.mindexGui.model.config.GuiSoundSettings;
-import com.jeongns.mindex.mindexGui.model.layout.CategorySymbol;
-import com.jeongns.mindex.mindexGui.model.layout.DefaultSymbol;
-import com.jeongns.mindex.mindexGui.model.layout.GuiView;
 import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplay;
 import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplayMode;
-import com.jeongns.mindex.mindexGui.model.layout.SymbolRole;
+import com.jeongns.mindex.mindexGui.model.layout.*;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -24,10 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.LinkedHashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @AllArgsConstructor
 public class GuiConfigLoader {

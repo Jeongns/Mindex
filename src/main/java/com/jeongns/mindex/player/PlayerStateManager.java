@@ -4,7 +4,6 @@ import com.jeongns.mindex.manager.Manager;
 import com.jeongns.mindex.player.cache.PlayerStateCache;
 import com.jeongns.mindex.player.cache.PlayerStateCache.PendingPlayerStateChange;
 import com.jeongns.mindex.player.cache.PlayerStateCache.PlayerStateChange;
-import com.jeongns.mindex.player.cache.PlayerStateCache.PlayerStateChangeType;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.player.repository.PlayerStateRepository;
 import lombok.NonNull;
