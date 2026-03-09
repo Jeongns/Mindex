@@ -77,7 +77,6 @@ config.yml
 
 - `sound`는 반드시 유효한 마인크래프트 사운드 키여야 합니다.
 - `material`은 반드시 유효한 Bukkit `Material` 이름이어야 합니다.
-- `custom-model-data`는 음수를 사용할 수 없습니다.
 - 메시지에는 MiniMessage 형식을 사용합니다.
 - 예: `<green>성공`, `<yellow>경고`, `<red>오류`, `<gray>설명`
 - `player-state-storage`와 `database.*` 변경은 `/mindex reload`가 아니라 서버 재시작 후 반영됩니다.
@@ -161,11 +160,3 @@ categories/<category>.yml
       └─ reward                                            # [선택] 문자열 또는 문자열 리스트: 등록 성공 보상 명령
                                                             지원 치환값: <player>
 ```
-
-주의:
-
-- `entries.id`는 필수입니다.
-- `rewardButton`과 `claimedRewardButton`은 둘 다 필수입니다.
-- `entries.material`은 실제 등록 판정 기준입니다.
-- `reward`, `rewardButton.customModelData`, `entries.customModelData`는 모두 비워둘 수 있습니다.
-- `reward` 명령 템플릿에서는 `<player>` 치환값을 사용할 수 있습니다.
