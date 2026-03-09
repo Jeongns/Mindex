@@ -1,7 +1,7 @@
 id: fishing
 name: "낚시"
 reward:
-  - "give %player% emerald 1"
+  - "give <player> emerald 1"
 
 rewardButton:
   material: BARREL
@@ -16,60 +16,60 @@ entries:
     name: "대구"
     description: "대구를 낚았다."
     material: COD
-    reward: "give %player% cod 4"
+    reward: "give <player> cod 4"
 
   - id: salmon
     amount: 4
     name: "연어"
     description: "연어를 낚았다."
     material: SALMON
-    reward: "give %player% salmon 4"
+    reward: "give <player> salmon 4"
 
   - id: tropical_fish
     amount: 3
     name: "열대어"
     description: "알록달록한 열대어를 건져 올렸다."
     material: TROPICAL_FISH
-    reward: "give %player% tropical_fish 3"
+    reward: "give <player> tropical_fish 3"
 
   - id: pufferfish
     amount: 2
     name: "복어"
     description: "위험한 복어를 조심히 낚아냈다."
     material: PUFFERFISH
-    reward: "give %player% pufferfish 2"
+    reward: "give <player> pufferfish 2"
 
   - id: nautilus_shell
     amount: 1
     name: "앵무조개 껍데기"
     description: "바다의 진귀한 껍데기를 손에 넣었다."
     material: NAUTILUS_SHELL
-    reward: "give %player% nautilus_shell 1"
+    reward: "give <player> nautilus_shell 1"
 
   - id: bowl_of_kelp
     amount: 16
     name: "켈프 다발"
     description: "낚시 중 떠내려온 해초를 모았다."
     material: KELP
-    reward: "give %player% dried_kelp 12"
+    reward: "give <player> dried_kelp 12"
 
   - id: ink_sac
     amount: 6
     name: "먹물주머니"
     description: "먹물주머니를 챙겨 왔다."
     material: INK_SAC
-    reward: "give %player% ink_sac 6"
+    reward: "give <player> ink_sac 6"
 
   - id: string_bundle
     amount: 8
     name: "낚싯줄 뭉치"
     description: "낚싯줄과 함께 건져 올린 잡동사니를 정리했다."
     material: STRING
-    reward: "give %player% string 10"
+    reward: "give <player> string 10"
 
   - id: bone
     amount: 5
     name: "뼈 조각"
     description: "수면 위를 떠다니던 뼈 조각을 주웠다."
     material: BONE
-    reward: "give %player% bone_meal 10"
+    reward: "give <player> bone_meal 10"

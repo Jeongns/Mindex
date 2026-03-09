@@ -142,6 +142,7 @@ categories/<category>.yml
 ├─ id                                                      # 카테고리 ID
 ├─ name                                                    # 카테고리 표시 이름
 ├─ reward                                                  # [선택] 문자열 또는 문자열 리스트, 카테고리 완료 보상 명령
+│                                                           지원 치환값: <player>
 ├─ rewardButton                                            # 카테고리 완료 보상 버튼 메타데이터
 │  ├─ material                                             # Material 이름
 │  ├─ customModelData                                      # [선택] 정수(Integer), 버튼 CustomModelData
@@ -158,6 +159,7 @@ categories/<category>.yml
       ├─ material                                          # Material 이름, 등록 판정과 기본 아이콘 기준
       ├─ customModelData                                   # [선택] 정수(Integer), 등록 판정 시 함께 비교
       └─ reward                                            # [선택] 문자열 또는 문자열 리스트, 등록 성공 보상 명령
+                                                            지원 치환값: <player>
 ```
 
 주의:
@@ -165,3 +167,4 @@ categories/<category>.yml
 - `entries.id`는 필수입니다.
 - `entries.material`은 실제 등록 판정 기준입니다.
 - `reward`, `rewardButton.customModelData`, `entries.customModelData`는 모두 비워둘 수 있습니다.
+- `reward` 명령 템플릿에서는 `<player>` 치환값을 사용할 수 있습니다.

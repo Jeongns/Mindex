@@ -1,8 +1,8 @@
 id: mining
 name: "광물"
 reward:
-  - "give %player% diamond 1"
-  - "effect give %player% haste 10 0 true"
+  - "give <player> diamond 1"
+  - "effect give <player> haste 10 0 true"
 
 rewardButton:
   material: CHEST
@@ -18,68 +18,68 @@ entries:
     description: "석탄 광석을 채굴했다."
     material: COAL
     reward:
-      - "exp give %player% 2 levels"
-      - "effect give %player% speed 5 0 true"
+      - "exp give <player> 2 levels"
+      - "effect give <player> speed 5 0 true"
 
   - id: iron
     amount: 8
     name: "철"
     description: "철 광석을 채굴했다."
     material: IRON_INGOT
-    reward: "give %player% iron_ingot 8"
+    reward: "give <player> iron_ingot 8"
 
   - id: copper
     amount: 12
     name: "구리"
     description: "구리를 캐내 도감에 기록했다."
     material: COPPER_INGOT
-    reward: "give %player% copper_ingot 12"
+    reward: "give <player> copper_ingot 12"
 
   - id: gold
     amount: 6
     name: "금"
     description: "금 광맥을 찾아 제련까지 마쳤다."
     material: GOLD_INGOT
-    reward: "give %player% golden_apple 1"
+    reward: "give <player> golden_apple 1"
 
   - id: lapis
     amount: 20
     name: "청금석"
     description: "푸른 광석 조각을 모았다."
     material: LAPIS_LAZULI
-    reward: "give %player% lapis_lazuli 24"
+    reward: "give <player> lapis_lazuli 24"
 
   - id: redstone
     amount: 24
     name: "레드스톤"
     description: "붉은 가루를 잔뜩 채집했다."
     material: REDSTONE
-    reward: "give %player% redstone 32"
+    reward: "give <player> redstone 32"
 
   - id: diamond
     amount: 3
     name: "다이아몬드"
     description: "반짝이는 다이아몬드를 발견했다."
     material: DIAMOND
-    reward: "give %player% diamond 2"
+    reward: "give <player> diamond 2"
 
   - id: emerald
     amount: 2
     name: "에메랄드"
     description: "희귀한 녹빛 보석을 얻었다."
     material: EMERALD
-    reward: "give %player% emerald 3"
+    reward: "give <player> emerald 3"
 
   - id: quartz
     amount: 12
     name: "석영"
     description: "네더 석영을 캐서 정리했다."
     material: QUARTZ
-    reward: "give %player% quartz 16"
+    reward: "give <player> quartz 16"
 
   - id: ancient_debris
     amount: 1
     name: "고대 잔해"
     description: "네더라이트의 흔적을 찾아냈다."
     material: ANCIENT_DEBRIS
-    reward: "give %player% netherite_scrap 1"
+    reward: "give <player> netherite_scrap 1"

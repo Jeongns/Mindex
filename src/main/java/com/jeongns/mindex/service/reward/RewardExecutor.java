@@ -1,11 +1,13 @@
 package com.jeongns.mindex.service.reward;
 
+import com.jeongns.mindex.util.CommandTemplateResolver;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Map;
 
 public class RewardExecutor {
     @NonNull
@@ -29,7 +31,10 @@ public class RewardExecutor {
         if (rewardCommand == null || rewardCommand.isBlank()) {
             return true;
         }
-        String command = rewardCommand.replace("%player%", player.getName());
+        String command = CommandTemplateResolver.resolve(
+                rewardCommand,
+                Map.of("player", player.getName())
+        );
         boolean executed = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         if (!executed) {
             plugin.getLogger().warning("[Reward] command failed: " + command);
