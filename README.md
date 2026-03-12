@@ -49,8 +49,10 @@ config.yml
 │  │                                                        값:
 │  │                                                        - FIXED_ITEM: 지정한 아이템으로 잠금 엔트리를 표시
 │  │                                                        - ENTRY_ITEM_CUSTOM_MODEL_DATA: 엔트리 원래 아이템을 유지하고 custom-model-data만 적용
+│  │                                                        - FIXED_ITEM_ENTRY_MATERIAL_STRING: 지정한 아이템을 사용하고 string-prefix + 엔트리 material 문자열을 custom-model-data.strings에 적용
 │  ├─ material                                             # Bukkit Material 이름: FIXED_ITEM 모드에서 사용할 아이템
 │  ├─ name                                                 # [선택] 문자열: 잠금 엔트리 이름, 비워두면 엔트리 원래 이름 사용
+│  ├─ string-prefix                                        # [선택] 문자열: FIXED_ITEM_ENTRY_MATERIAL_STRING 모드에서 custom-model-data.strings에 붙일 접두사
 │  └─ custom-model-data                                    # [선택] CustomModelData 설정 객체
 │     ├─ floats                                            # [선택] float 리스트
 │     ├─ flags                                             # [선택] boolean 리스트

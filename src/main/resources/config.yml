@@ -9,6 +9,7 @@ locked-entry-display:
   mode: FIXED_ITEM
   material: BARRIER
   name:
+  string-prefix:
   custom-model-data:
     floats: []
     flags: []

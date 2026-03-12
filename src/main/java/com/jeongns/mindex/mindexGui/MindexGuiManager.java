@@ -7,7 +7,7 @@ import com.jeongns.mindex.mindexGui.model.config.GuiMessageSettings;
 import com.jeongns.mindex.mindexGui.model.config.GuiSettings;
 import com.jeongns.mindex.mindexGui.model.layout.GuiModel;
 import com.jeongns.mindex.mindexGui.model.config.GuiSoundSettings;
-import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplay;
+import com.jeongns.mindex.mindexGui.display.LockedEntryDisplay;
 import com.jeongns.mindex.mindexGui.view.MindexCatalogGui;
 import com.jeongns.mindex.player.PlayerStateManager;
 import com.jeongns.mindex.service.registration.RegistrationService;

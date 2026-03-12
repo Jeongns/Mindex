@@ -7,8 +7,8 @@ import com.jeongns.mindex.mindexGui.model.config.GuiMessageSettings;
 import com.jeongns.mindex.mindexGui.model.config.GuiSettings;
 import com.jeongns.mindex.mindexGui.model.config.GuiSoundSetting;
 import com.jeongns.mindex.mindexGui.model.config.GuiSoundSettings;
-import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplay;
-import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplayMode;
+import com.jeongns.mindex.mindexGui.display.LockedEntryDisplay;
+import com.jeongns.mindex.mindexGui.display.LockedEntryDisplayMode;
 import com.jeongns.mindex.mindexGui.model.layout.*;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -81,8 +81,8 @@ public class GuiConfigLoader {
 
         var customModelData = CustomModelDataComponentParser.parseSection(plugin.getConfig(), "locked-entry-display.custom-model-data");
         String name = plugin.getConfig().getString("locked-entry-display.name");
-
-        return new LockedEntryDisplay(mode, material, customModelData, name);
+        String stringPrefix = plugin.getConfig().getString("locked-entry-display.string-prefix");
+        return new LockedEntryDisplay(mode, material, customModelData, name, stringPrefix);
     }
 
     private GuiSoundSettings loadGuiSoundSettings() {

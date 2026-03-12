@@ -5,13 +5,14 @@ import com.jeongns.mindex.catalog.entity.MindexCategory;
 import com.jeongns.mindex.catalog.entity.MindexEntry;
 import com.jeongns.mindex.catalog.entity.CategoryRewardButton;
 import com.jeongns.mindex.item.CustomModelDataComponentUtil;
+import com.jeongns.mindex.mindexGui.display.strategy.LockedEntryDisplayStrategy;
+import com.jeongns.mindex.mindexGui.display.strategy.LockedEntryDisplayStrategyFactory;
 import com.jeongns.mindex.mindexGui.action.GuiAction;
 import com.jeongns.mindex.mindexGui.model.layout.CategorySymbol;
 import com.jeongns.mindex.mindexGui.model.layout.DefaultSymbol;
 import com.jeongns.mindex.mindexGui.model.layout.GuiModel;
 import com.jeongns.mindex.mindexGui.model.layout.GuiView;
-import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplay;
-import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplayMode;
+import com.jeongns.mindex.mindexGui.display.LockedEntryDisplay;
 import com.jeongns.mindex.mindexGui.model.layout.SymbolRole;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.mindexGui.view.MindexCatalogGui;
@@ -34,6 +35,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public final class MindexCatalogGuiRenderer {
+    private final LockedEntryDisplayStrategyFactory lockedEntryDisplayStrategyFactory = new LockedEntryDisplayStrategyFactory();
+
     public CatalogGuiRenderResult render(
             @NonNull MindexCatalogGui holder,
             @NonNull MindexCatalog catalog,
@@ -270,18 +273,13 @@ public final class MindexCatalogGuiRenderer {
     }
 
     private ItemStack createLockedEntryItem(@NonNull MindexEntry entry, @NonNull LockedEntryDisplay lockedEntryDisplay) {
-        Material displayMaterial = lockedEntryDisplay.getMode() == LockedEntryDisplayMode.ENTRY_ITEM_CUSTOM_MODEL_DATA
-                ? entry.getItem()
-                : lockedEntryDisplay.getMaterial();
-        String displayName = lockedEntryDisplay.getName() == null || lockedEntryDisplay.getName().isBlank()
-                ? entry.getName()
-                : lockedEntryDisplay.getName();
+        LockedEntryDisplayStrategy strategy = lockedEntryDisplayStrategyFactory.get(lockedEntryDisplay.getMode());
         return createItem(
-                displayMaterial,
-                displayName,
+                strategy.resolveMaterial(entry, lockedEntryDisplay),
+                strategy.resolveName(entry, lockedEntryDisplay),
                 List.of(entry.getDescription()),
                 Material.PAPER,
-                lockedEntryDisplay.getCustomModelData(),
+                strategy.resolveCustomModelData(entry, lockedEntryDisplay),
                 entry.getAmount()
         );
     }

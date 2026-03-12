@@ -1,6 +1,6 @@
 package com.jeongns.mindex.mindexGui.model.config;
 
-import com.jeongns.mindex.mindexGui.model.display.LockedEntryDisplay;
+import com.jeongns.mindex.mindexGui.display.LockedEntryDisplay;
 import com.jeongns.mindex.mindexGui.model.layout.GuiModel;
 
 import lombok.Getter;

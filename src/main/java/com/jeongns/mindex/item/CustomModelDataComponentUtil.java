@@ -28,6 +28,18 @@ public final class CustomModelDataComponentUtil {
         return create(source.getFloats(), source.getFlags(), source.getStrings());
     }
 
+    public static CustomModelDataComponent withStrings(
+            CustomModelDataComponent source,
+            @NonNull List<String> strings
+    ) {
+        if (source == null) {
+            return create(List.of(), List.of(), strings);
+        }
+        CustomModelDataComponent component = copy(source);
+        component.setStrings(List.copyOf(strings));
+        return component;
+    }
+
     public static boolean isEmpty(CustomModelDataComponent component) {
         return component == null
                 || (component.getFloats().isEmpty()
