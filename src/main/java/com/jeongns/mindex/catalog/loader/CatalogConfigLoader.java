@@ -3,6 +3,7 @@ package com.jeongns.mindex.catalog.loader;
 import com.jeongns.mindex.catalog.entity.CategoryRewardButton;
 import com.jeongns.mindex.catalog.entity.MindexCategory;
 import com.jeongns.mindex.catalog.entity.MindexEntry;
+import com.jeongns.mindex.config.CustomModelDataComponentParser;
 import com.jeongns.mindex.config.validation.ConfigValueValidator;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -92,14 +93,9 @@ public class CatalogConfigLoader {
                 fileName + "." + path + ".name"
         );
         List<String> lore = categoryConfig.getStringList(path + ".lore");
-        Integer customModelData = parseOptionalPositiveInt(
-                categoryConfig.get(path + ".customModelData"),
-                fileName + "." + path + ".customModelData"
-        );
-
         return new CategoryRewardButton(
                 ConfigValueValidator.parseMaterial(materialName),
-                customModelData,
+                CustomModelDataComponentParser.parseSection(categoryConfig, path + ".custom-model-data"),
                 name,
                 lore
         );
@@ -150,7 +146,7 @@ public class CatalogConfigLoader {
                 ConfigValueValidator.requireString(valueAsString(row.get("name")), "entries.name"),
                 ConfigValueValidator.requireString(valueAsString(row.get("description")), "entries.description"),
                 material,
-                parseOptionalPositiveInt(row.get("customModelData"), "entries.customModelData"),
+                CustomModelDataComponentParser.parseMap(row.get("custom-model-data"), "entries.custom-model-data"),
                 parsePositiveAmount(row.get("amount"), "entries.amount", 1),
                 parseRewardCommands(row.get("reward"), "entries.reward")
         );
@@ -227,33 +223,5 @@ public class CatalogConfigLoader {
             throw new IllegalArgumentException("amount는 1 이상이어야 합니다: " + fieldName + "=" + amount);
         }
         return amount;
-    }
-
-    private Integer parseOptionalPositiveInt(Object rawValue, @NonNull String fieldName) {
-        if (rawValue == null) {
-            return null;
-        }
-
-        int value;
-        if (rawValue instanceof Number numberValue) {
-            value = numberValue.intValue();
-        } else if (rawValue instanceof String stringValue) {
-            String trimmed = stringValue.trim();
-            if (trimmed.isEmpty()) {
-                return null;
-            }
-            try {
-                value = Integer.parseInt(trimmed);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("유효하지 않은 숫자: " + fieldName + "=" + rawValue, e);
-            }
-        } else {
-            throw new IllegalArgumentException("유효하지 않은 숫자 타입: " + fieldName + "=" + rawValue);
-        }
-
-        if (value < 0) {
-            throw new IllegalArgumentException("0 이상이어야 합니다: " + fieldName + "=" + value);
-        }
-        return value;
     }
 }

@@ -8,7 +8,11 @@ database:
 locked-entry-display:
   mode: FIXED_ITEM
   material: BARRIER
+  name:
   custom-model-data:
+    floats: []
+    flags: []
+    strings: []
 sounds:
   menu-select:
     enabled: true

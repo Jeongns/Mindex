@@ -4,6 +4,7 @@ import com.jeongns.mindex.catalog.entity.MindexCatalog;
 import com.jeongns.mindex.catalog.entity.MindexCategory;
 import com.jeongns.mindex.catalog.entity.MindexEntry;
 import com.jeongns.mindex.catalog.entity.CategoryRewardButton;
+import com.jeongns.mindex.item.CustomModelDataComponentUtil;
 import com.jeongns.mindex.mindexGui.action.GuiAction;
 import com.jeongns.mindex.mindexGui.model.layout.CategorySymbol;
 import com.jeongns.mindex.mindexGui.model.layout.DefaultSymbol;
@@ -272,9 +273,12 @@ public final class MindexCatalogGuiRenderer {
         Material displayMaterial = lockedEntryDisplay.getMode() == LockedEntryDisplayMode.ENTRY_ITEM_CUSTOM_MODEL_DATA
                 ? entry.getItem()
                 : lockedEntryDisplay.getMaterial();
+        String displayName = lockedEntryDisplay.getName() == null || lockedEntryDisplay.getName().isBlank()
+                ? entry.getName()
+                : lockedEntryDisplay.getName();
         return createItem(
                 displayMaterial,
-                entry.getName(),
+                displayName,
                 List.of(entry.getDescription()),
                 Material.PAPER,
                 lockedEntryDisplay.getCustomModelData(),
@@ -287,7 +291,7 @@ public final class MindexCatalogGuiRenderer {
             String name,
             List<String> lore,
             Material fallback,
-            Integer customModelData,
+            CustomModelDataComponent customModelData,
             int amount
     ) {
         ItemStack itemStack = new ItemStack(material != null ? material : fallback);
@@ -301,9 +305,7 @@ public final class MindexCatalogGuiRenderer {
                 itemMeta.lore(MiniMessageUtil.parse(lore));
             }
             if (customModelData != null) {
-                CustomModelDataComponent customModelDataComponent = itemMeta.getCustomModelDataComponent();
-                customModelDataComponent.setFloats(List.of(customModelData.floatValue()));
-                itemMeta.setCustomModelDataComponent(customModelDataComponent);
+                itemMeta.setCustomModelDataComponent(CustomModelDataComponentUtil.copy(customModelData));
             }
             itemStack.setItemMeta(itemMeta);
         }

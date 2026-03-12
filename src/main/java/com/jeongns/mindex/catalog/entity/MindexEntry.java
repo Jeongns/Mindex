@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Material;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public final class MindexEntry {
     private final String description;
     @NonNull
     private final Material item;
-    private final Integer customModelData;
+    private final CustomModelDataComponent customModelData;
     private final int amount;
     @NonNull
     private final List<String> reward;

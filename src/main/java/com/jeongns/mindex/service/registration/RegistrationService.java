@@ -2,6 +2,7 @@ package com.jeongns.mindex.service.registration;
 
 import com.jeongns.mindex.catalog.CatalogManager;
 import com.jeongns.mindex.catalog.entity.MindexEntry;
+import com.jeongns.mindex.item.CustomModelDataComponentUtil;
 import com.jeongns.mindex.player.PlayerStateManager;
 import com.jeongns.mindex.service.reward.RewardExecutor;
 import lombok.NonNull;
@@ -72,26 +73,39 @@ public class RegistrationService {
         }
 
         ItemMeta itemMeta = itemStack.getItemMeta();
-        Integer requiredCustomModelData = entry.getCustomModelData();
-        Integer itemCustomModelData = extractCustomModelData(itemMeta);
+        CustomModelDataComponent requiredCustomModelData = entry.getCustomModelData();
+        CustomModelDataComponent itemCustomModelData = extractCustomModelData(itemMeta);
 
         if (requiredCustomModelData == null) {
             return itemCustomModelData == null;
         }
 
-        return requiredCustomModelData.equals(itemCustomModelData);
+        return hasSameCustomModelData(requiredCustomModelData, itemCustomModelData);
     }
 
-    private Integer extractCustomModelData(ItemMeta itemMeta) {
+    private boolean hasSameCustomModelData(
+            @NonNull CustomModelDataComponent required,
+            CustomModelDataComponent actual
+    ) {
+        if (actual == null) {
+            return false;
+        }
+
+        return required.getFloats().equals(actual.getFloats())
+                && required.getFlags().equals(actual.getFlags())
+                && required.getStrings().equals(actual.getStrings());
+    }
+
+    private CustomModelDataComponent extractCustomModelData(ItemMeta itemMeta) {
         if (itemMeta == null) {
             return null;
         }
 
         CustomModelDataComponent customModelDataComponent = itemMeta.getCustomModelDataComponent();
-        if (customModelDataComponent.getFloats().isEmpty()) {
+        if (CustomModelDataComponentUtil.isEmpty(customModelDataComponent)) {
             return null;
         }
-        return customModelDataComponent.getFloats().get(0).intValue();
+        return CustomModelDataComponentUtil.copy(customModelDataComponent);
     }
 
     private void consumeItems(@NonNull Player player, @NonNull MindexEntry entry) {

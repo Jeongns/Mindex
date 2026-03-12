@@ -50,7 +50,11 @@ config.yml
 │  │                                                        - FIXED_ITEM: 지정한 아이템으로 잠금 엔트리를 표시
 │  │                                                        - ENTRY_ITEM_CUSTOM_MODEL_DATA: 엔트리 원래 아이템을 유지하고 custom-model-data만 적용
 │  ├─ material                                             # Bukkit Material 이름: FIXED_ITEM 모드에서 사용할 아이템
-│  └─ custom-model-data                                    # [선택] 정수(Integer): 잠금 엔트리 아이템에 적용할 CustomModelData, 비워두면 적용하지 않음
+│  ├─ name                                                 # [선택] 문자열: 잠금 엔트리 이름, 비워두면 엔트리 원래 이름 사용
+│  └─ custom-model-data                                    # [선택] CustomModelData 설정 객체
+│     ├─ floats                                            # [선택] float 리스트
+│     ├─ flags                                             # [선택] boolean 리스트
+│     └─ strings                                           # [선택] 문자열 리스트
 ├─ sounds                                                  # GUI 사운드 설정
 │  ├─ menu-select                                          # 일반 선택 사운드 설정 묶음
 │  ├─ registration-success                                 # 등록 성공 사운드 설정 묶음
@@ -139,12 +143,18 @@ categories/<category>.yml
 │                                                           지원 치환값: <player>
 ├─ rewardButton                                            # 보상 수령 전 버튼 메타데이터
 │  ├─ material                                             # Bukkit Material 이름: 보상 수령 전 버튼 재질
-│  ├─ customModelData                                      # [선택] 정수(Integer): 보상 수령 전 버튼 CustomModelData
+│  ├─ custom-model-data                                    # [선택] CustomModelData 설정 객체
+│  │  ├─ floats                                            # [선택] float 리스트
+│  │  ├─ flags                                             # [선택] boolean 리스트
+│  │  └─ strings                                           # [선택] 문자열 리스트
 │  ├─ name                                                 # 문자열: 보상 수령 전 버튼 이름
 │  └─ lore                                                 # [선택] 문자열 리스트: 보상 수령 전 버튼 설명
 ├─ claimedRewardButton                                     # 보상 수령 후 버튼 메타데이터
 │  ├─ material                                             # Bukkit Material 이름: 보상 수령 후 버튼 재질
-│  ├─ customModelData                                      # [선택] 정수(Integer): 보상 수령 후 버튼 CustomModelData
+│  ├─ custom-model-data                                    # [선택] CustomModelData 설정 객체
+│  │  ├─ floats                                            # [선택] float 리스트
+│  │  ├─ flags                                             # [선택] boolean 리스트
+│  │  └─ strings                                           # [선택] 문자열 리스트
 │  ├─ name                                                 # 문자열: 보상 수령 후 버튼 이름
 │  └─ lore                                                 # [선택] 문자열 리스트: 보상 수령 후 버튼 설명
 └─ entries                                                 # 도감 엔트리 목록
@@ -155,7 +165,10 @@ categories/<category>.yml
       ├─ name                                              # 문자열: 엔트리 표시 이름
       ├─ description                                       # 문자열: 엔트리 설명
       ├─ material                                          # Bukkit Material 이름: 등록 판정과 기본 아이콘 기준
-      ├─ customModelData                                   # [선택] 정수(Integer): 등록 판정 시 함께 비교
+      ├─ custom-model-data                                 # [선택] CustomModelData 설정 객체: 등록 판정 시 함께 비교
+      │  ├─ floats                                         # [선택] float 리스트
+      │  ├─ flags                                          # [선택] boolean 리스트
+      │  └─ strings                                        # [선택] 문자열 리스트
       └─ reward                                            # [선택] 문자열 또는 문자열 리스트: 등록 성공 보상 명령
                                                             지원 치환값: <player>
 ```

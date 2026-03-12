@@ -1,6 +1,7 @@
 package com.jeongns.mindex.mindexGui.loader;
 
 import com.jeongns.mindex.config.YamlNodeReader;
+import com.jeongns.mindex.config.CustomModelDataComponentParser;
 import com.jeongns.mindex.config.validation.ConfigValueValidator;
 import com.jeongns.mindex.mindexGui.model.config.GuiMessageSettings;
 import com.jeongns.mindex.mindexGui.model.config.GuiSettings;
@@ -78,11 +79,10 @@ public class GuiConfigLoader {
             throw new IllegalArgumentException("유효하지 않은 잠금 엔트리 material: " + materialName);
         }
 
-        Integer customModelData = plugin.getConfig().contains("locked-entry-display.custom-model-data")
-                ? plugin.getConfig().getInt("locked-entry-display.custom-model-data")
-                : null;
+        var customModelData = CustomModelDataComponentParser.parseSection(plugin.getConfig(), "locked-entry-display.custom-model-data");
+        String name = plugin.getConfig().getString("locked-entry-display.name");
 
-        return new LockedEntryDisplay(mode, material, customModelData);
+        return new LockedEntryDisplay(mode, material, customModelData, name);
     }
 
     private GuiSoundSettings loadGuiSoundSettings() {

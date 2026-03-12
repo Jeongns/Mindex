@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Material;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public final class CategoryRewardButton {
     @NonNull
     private final Material material;
-    private final Integer customModelData;
+    private final CustomModelDataComponent customModelData;
     @NonNull
     private final String name;
     @NonNull
