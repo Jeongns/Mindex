@@ -1,0 +1,74 @@
+id: farming
+name: "농사"
+reward:
+  - "give <player> golden_carrot 8"
+
+rewardButton:
+  material: COMPOSTER
+  name: "<green>농사 카테고리 완료 보상"
+  lore:
+    - "<gray>농사 카테고리를 모두 완성하면"
+    - "<gray>이 버튼으로 보상을 수령합니다."
+
+claimedRewardButton:
+  material: COMPOSTER
+  name: "<gray>농사 카테고리 보상 수령 완료"
+  lore:
+    - "<dark_gray>이미 농사 카테고리 보상을 수령했습니다."
+
+entries:
+  - id: wheat
+    amount: 16
+    name: "밀"
+    description: "잘 익은 밀을 수확했다."
+    material: WHEAT
+    reward: "give <player> bread 8"
+
+  - id: carrot
+    amount: 12
+    name: "당근"
+    description: "당근을 정성스럽게 길렀다."
+    material: CARROT
+    reward: "give <player> carrot 12"
+
+  - id: potato
+    amount: 12
+    name: "감자"
+    description: "감자를 캐서 도감에 기록했다."
+    material: POTATO
+    reward: "give <player> baked_potato 8"
+
+  - id: beetroot
+    amount: 10
+    name: "비트"
+    description: "붉은 비트를 수확했다."
+    material: BEETROOT
+    reward: "give <player> beetroot_soup 1"
+
+  - id: pumpkin
+    amount: 4
+    name: "호박"
+    description: "탐스러운 호박을 거두었다."
+    material: PUMPKIN
+    reward: "give <player> pumpkin_pie 2"
+
+  - id: melon
+    amount: 6
+    name: "수박"
+    description: "달콤한 수박을 잘라 담았다."
+    material: MELON_SLICE
+    reward: "give <player> melon_slice 12"
+
+  - id: sugar_cane
+    amount: 18
+    name: "사탕수수"
+    description: "사탕수수를 크게 묶어 수확했다."
+    material: SUGAR_CANE
+    reward: "give <player> paper 12"
+
+  - id: cactus
+    amount: 12
+    name: "선인장"
+    description: "따갑지만 유용한 선인장을 모았다."
+    material: CACTUS
+    reward: "give <player> green_dye 6"

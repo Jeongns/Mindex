@@ -5,8 +5,6 @@ defaultSymbols:
     name: " "
   "E":
     role: ENTRY_SLOT
-    material: PAPER
-    name: "<gray>도감 엔트리"
   "<":
     role: PREV_PAGE
     material: ARROW
@@ -21,11 +19,6 @@ defaultSymbols:
     name: "<yellow>카테고리 선택으로"
   "R":
     role: CLAIM_CATEGORY_REWARD
-    material: CHEST
-    name: "<gold>카테고리 완료 보상"
-    lore:
-      - "<gray>현재 카테고리를 완성하면"
-      - "<gray>이 버튼으로 보상을 수령합니다."
 
 # defaultView 에서 사용되는 카테고리 버튼 심볼
 categorySymbols:
@@ -41,6 +34,12 @@ categorySymbols:
     name: "<dark_aqua>낚시 도감"
     lore:
       - "<gray>낚시 카테고리 보기"
+  "A":
+    categoryId: farming
+    material: IRON_HOE
+    name: "<green>농사 도감"
+    lore:
+      - "<gray>농사 카테고리 보기"
 
 entryView:
   title: "<gold>도감 - <white><category_name> <gray>(<page>/<max_page>)"
@@ -59,7 +58,7 @@ defaultView:
   rows: 6
   layout:
     - "#########"
-    - "#M.....F#"
+    - "#M..A..F#"
     - "#.......#"
     - "#.......#"
     - "#.......#"
