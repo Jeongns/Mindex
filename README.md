@@ -25,7 +25,7 @@
 [시연 영상](https://www.youtube.com/watch?v=uo_gC4ErGWQ)
 
 예제 파일에 있는 설정과 리소스팩을 사용하면 간단한 GUI 커스텀 도감을 사용해 보실 수 있습니다.\
-리소스팩은 PAPER에 custom_model_data를 "mindex_<METERIAL\NAME>"을 설정할 경우 해당 아이템의 흑백 아이콘을 얻습니다.\
+리소스팩은 PAPER에 custom_model_data를 "mindex_<METERIAL\>"을 설정할 경우 해당 아이템의 흑백 아이콘을 얻습니다.\
 (모든 아이템 지원 X)
 
 - [예제 설정 폴더](https://github.com/Jeongns/Mindex/tree/main/example/Mindex)
