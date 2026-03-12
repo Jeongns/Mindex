@@ -20,7 +20,8 @@ public class CatalogConfigLoader {
     private static final String ENTRY_LIST_PATH = "entries";
     private static final List<String> DEFAULT_CATEGORY_RESOURCES = List.of(
             "categories/mining.yml",
-            "categories/fishing.yml"
+            "categories/fishing.yml",
+            "categories/farming.yml"
     );
 
     @NonNull
@@ -107,13 +108,9 @@ public class CatalogConfigLoader {
             directory.mkdirs();
         }
 
-        File[] categoryFiles = directory.listFiles((dir, name) -> name.endsWith(".yml"));
-        if (categoryFiles != null && categoryFiles.length > 0) {
-            return;
-        }
-
         for (String resourcePath : DEFAULT_CATEGORY_RESOURCES) {
-            if (plugin.getResource(resourcePath) != null) {
+            File targetFile = new File(plugin.getDataFolder(), resourcePath);
+            if (!targetFile.exists() && plugin.getResource(resourcePath) != null) {
                 plugin.saveResource(resourcePath, false);
             }
         }
