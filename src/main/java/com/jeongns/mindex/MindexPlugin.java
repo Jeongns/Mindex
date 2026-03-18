@@ -7,7 +7,6 @@ import com.jeongns.mindex.mindexGui.MindexGuiManager;
 import com.jeongns.mindex.listener.ListenerManager;
 import com.jeongns.mindex.player.PlayerStateManager;
 import com.jeongns.mindex.player.repository.factory.PlayerStateRepositoryFactory;
-import com.jeongns.mindex.scheduler.SchedulerManager;
 import com.jeongns.mindex.service.registration.RegistrationService;
 import com.jeongns.mindex.service.reward.CategoryRewardService;
 import com.jeongns.mindex.service.reward.RewardExecutor;
@@ -25,7 +24,6 @@ public final class MindexPlugin extends JavaPlugin {
     private RegistrationService registrationService;
     @Getter
     private CategoryRewardService categoryRewardService;
-    private SchedulerManager schedulerManager;
     private CommandManager commandManager;
 
     @Override
@@ -47,14 +45,12 @@ public final class MindexPlugin extends JavaPlugin {
                 categoryRewardService
         );
         this.listenerManager = new ListenerManager(this, mindexGuiManager, playerStateManager);
-        this.schedulerManager = new SchedulerManager(this, playerStateManager);
         this.commandManager = new CommandManager(this);
 
         this.catalogManager.initialize();
         this.playerStateManager.initialize();
         this.mindexGuiManager.initialize();
         this.listenerManager.initialize();
-        this.schedulerManager.initialize();
         this.commandManager.initialize();
 
         getLogger().info("Mindex 플러그인이 시작되었습니다.");
@@ -66,7 +62,6 @@ public final class MindexPlugin extends JavaPlugin {
         playerStateManager.shutdown();
         mindexGuiManager.shutdown();
         listenerManager.shutdown();
-        schedulerManager.shutdown();
         commandManager.shutdown();
 
         getLogger().info("Mindex 플러그인이 종료되었습니다.");
@@ -78,6 +73,5 @@ public final class MindexPlugin extends JavaPlugin {
         catalogManager.reload();
         playerStateManager.reload();
         mindexGuiManager.reload();
-        schedulerManager.reload();
     }
 }

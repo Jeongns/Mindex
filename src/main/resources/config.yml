@@ -39,5 +39,3 @@ messages:
     success: "<green>카테고리 완료 보상을 수령했습니다."
     not-complete: "<red>아직 이 카테고리를 모두 완성하지 못했습니다."
     already-claimed: "<yellow>이미 이 카테고리 보상을 수령했습니다."
-
-auto-save-interval-minutes: 1
