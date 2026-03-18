@@ -1,5 +1,7 @@
 package com.jeongns.mindex.player.repository.impl;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import com.jeongns.mindex.player.repository.PlayerStateRepository;
 
 import com.jeongns.mindex.player.entity.PlayerMindexState;
@@ -8,7 +10,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,18 +52,15 @@ public class MySqlPlayerStateRepository implements PlayerStateRepository {
             """;
 
     @NonNull
-    private final String jdbcUrl;
-    @NonNull
-    private final String username;
-    @NonNull
-    private final String password;
+    private final HikariDataSource dataSource;
 
     public MySqlPlayerStateRepository(@NonNull JavaPlugin plugin) {
         FileConfiguration config = plugin.getConfig();
-        this.jdbcUrl = requireString(config, "database.jdbc-url");
-        this.username = requireString(config, "database.username");
-        this.password = config.getString("database.password", "");
+        String jdbcUrl = requireString(config, "database.jdbc-url");
+        String username = requireString(config, "database.username");
+        String password = config.getString("database.password", "");
         loadDriver();
+        this.dataSource = createDataSource(jdbcUrl, username, password);
         initializeSchema();
     }
 
@@ -150,6 +148,11 @@ public class MySqlPlayerStateRepository implements PlayerStateRepository {
         }
     }
 
+    @Override
+    public void close() {
+        dataSource.close();
+    }
+
     private void initializeSchema() {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
@@ -162,7 +165,7 @@ public class MySqlPlayerStateRepository implements PlayerStateRepository {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(jdbcUrl, username, password);
+        return dataSource.getConnection();
     }
 
     private void loadDriver() {
@@ -171,6 +174,20 @@ public class MySqlPlayerStateRepository implements PlayerStateRepository {
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException("MySQL JDBC 드라이버를 찾을 수 없습니다.", e);
         }
+    }
+
+    private HikariDataSource createDataSource(
+            @NonNull String jdbcUrl,
+            @NonNull String username,
+            @NonNull String password
+    ) {
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setPoolName("Mindex-MySQL");
+        hikariConfig.setDriverClassName(DRIVER_CLASS_NAME);
+        hikariConfig.setJdbcUrl(jdbcUrl);
+        hikariConfig.setUsername(username);
+        hikariConfig.setPassword(password);
+        return new HikariDataSource(hikariConfig);
     }
 
     private boolean existsPlayer(@NonNull Connection connection, @NonNull UUID playerId) throws SQLException {

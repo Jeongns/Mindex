@@ -2,14 +2,11 @@ package com.jeongns.mindex.player;
 
 import com.jeongns.mindex.manager.Manager;
 import com.jeongns.mindex.player.cache.PlayerStateCache;
-import com.jeongns.mindex.player.cache.PlayerStateCache.PendingPlayerStateChange;
-import com.jeongns.mindex.player.cache.PlayerStateCache.PlayerStateChange;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.player.repository.PlayerStateRepository;
 import lombok.NonNull;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,37 +37,32 @@ public class PlayerStateManager implements Manager {
             throw new IllegalStateException("이미 플레이어 상태가 존재합니다: " + playerId);
         }
 
+        repository.create(playerId);
         PlayerMindexState initialState = new PlayerMindexState(playerId, new HashSet<>(), new HashSet<>());
         cache.putIfAbsent(playerId, initialState);
-        cache.enqueueCreate(playerId);
         return initialState;
     }
 
     public boolean unlock(@NonNull UUID playerId, @NonNull String entryId) {
         PlayerMindexState playerState = find(playerId).orElseGet(() -> create(playerId));
-        boolean unlocked = playerState.unlock(entryId);
-        if (unlocked) {
-            cache.enqueueUnlock(playerId, entryId);
+        if (playerState.isUnlocked(entryId)) {
+            return false;
         }
-        return unlocked;
+
+        repository.unlock(playerId, entryId);
+        playerState.unlock(entryId);
+        return true;
     }
 
     public boolean claimCategoryReward(@NonNull UUID playerId, @NonNull String categoryId) {
         PlayerMindexState playerState = find(playerId).orElseGet(() -> create(playerId));
-        boolean claimed = playerState.claimCategoryReward(categoryId);
-        if (claimed) {
-            cache.enqueueClaimCategoryReward(playerId, categoryId);
+        if (playerState.hasClaimedCategoryReward(categoryId)) {
+            return false;
         }
-        return claimed;
-    }
 
-    public void save(@NonNull UUID playerId) {
-        List<PlayerStateChange> changes = cache.snapshotPlayerPendingChanges(playerId);
-        if (changes.isEmpty()) {
-            return;
-        }
-        applyChanges(playerId, changes);
-        cache.clearPendingChanges(List.of(playerId));
+        repository.claimCategoryReward(playerId, categoryId);
+        playerState.claimCategoryReward(categoryId);
+        return true;
     }
 
     public void reset(@NonNull UUID playerId) {
@@ -79,40 +71,17 @@ public class PlayerStateManager implements Manager {
     }
 
     public void unload(@NonNull UUID playerId) {
-        save(playerId);
         cache.remove(playerId);
-    }
-
-    public void flushDirty() {
-        List<PendingPlayerStateChange> pendingChanges = cache.snapshotAllPendingChanges();
-        if (pendingChanges.isEmpty()) {
-            return;
-        }
-        for (PendingPlayerStateChange pendingPlayerStateChange : pendingChanges) {
-            applyChanges(pendingPlayerStateChange.playerId(), pendingPlayerStateChange.changes());
-        }
-        cache.clearPendingChanges(pendingChanges.stream().map(PendingPlayerStateChange::playerId).toList());
     }
 
     @Override
     public void reload() {
-        flushDirty();
         cache.clear();
     }
 
     @Override
     public void shutdown() {
-        flushDirty();
         cache.clear();
-    }
-
-    private void applyChanges(@NonNull UUID playerId, @NonNull List<PlayerStateChange> changes) {
-        for (PlayerStateChange change : changes) {
-            switch (change.type()) {
-                case CREATE -> repository.create(playerId);
-                case UNLOCK_ENTRY -> repository.unlock(playerId, change.value());
-                case CLAIM_CATEGORY_REWARD -> repository.claimCategoryReward(playerId, change.value());
-            }
-        }
+        repository.close();
     }
 }

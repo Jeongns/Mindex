@@ -1,5 +1,7 @@
 package com.jeongns.mindex.player.repository.impl;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import com.jeongns.mindex.player.entity.PlayerMindexState;
 import com.jeongns.mindex.player.repository.PlayerStateRepository;
 import lombok.NonNull;
@@ -41,18 +43,15 @@ public class PostgresPlayerStateRepository implements PlayerStateRepository {
             """;
 
     @NonNull
-    private final String jdbcUrl;
-    @NonNull
-    private final String username;
-    @NonNull
-    private final String password;
+    private final HikariDataSource dataSource;
 
     public PostgresPlayerStateRepository(@NonNull JavaPlugin plugin) {
         FileConfiguration config = plugin.getConfig();
-        this.jdbcUrl = requireString(config, "database.jdbc-url");
-        this.username = requireString(config, "database.username");
-        this.password = config.getString("database.password", "");
+        String jdbcUrl = requireString(config, "database.jdbc-url");
+        String username = requireString(config, "database.username");
+        String password = config.getString("database.password", "");
         loadDriver();
+        this.dataSource = createDataSource(jdbcUrl, username, password);
         initializeSchema();
     }
 
@@ -141,6 +140,11 @@ public class PostgresPlayerStateRepository implements PlayerStateRepository {
         }
     }
 
+    @Override
+    public void close() {
+        dataSource.close();
+    }
+
     private void initializeSchema() {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
@@ -153,7 +157,7 @@ public class PostgresPlayerStateRepository implements PlayerStateRepository {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(jdbcUrl, username, password);
+        return dataSource.getConnection();
     }
 
     private void loadDriver() {
@@ -162,6 +166,20 @@ public class PostgresPlayerStateRepository implements PlayerStateRepository {
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException("PostgreSQL JDBC 드라이버를 찾을 수 없습니다.", e);
         }
+    }
+
+    private HikariDataSource createDataSource(
+            @NonNull String jdbcUrl,
+            @NonNull String username,
+            @NonNull String password
+    ) {
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setPoolName("Mindex-PostgreSQL");
+        hikariConfig.setDriverClassName(DRIVER_CLASS_NAME);
+        hikariConfig.setJdbcUrl(jdbcUrl);
+        hikariConfig.setUsername(username);
+        hikariConfig.setPassword(password);
+        return new HikariDataSource(hikariConfig);
     }
 
     private boolean existsPlayer(@NonNull Connection connection, @NonNull UUID playerId) throws SQLException {

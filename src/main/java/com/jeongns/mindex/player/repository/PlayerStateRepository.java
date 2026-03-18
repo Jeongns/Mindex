@@ -13,4 +13,7 @@ public interface PlayerStateRepository {
     boolean claimCategoryReward(UUID playerId, String categoryId);
 
     void reset(UUID playerId);
+
+    default void close() {
+    }
 }
